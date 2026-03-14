@@ -1,0 +1,13 @@
+---
+title: "CASA0023 Learning Diary"
+author: "Haoyu Jiang"
+---
+
+# Welcome
+
+Hi, I am **Haoyu Jiang**, currently pursuing a Master's degree in Urban Spatial Science at UCL CASA.\
+My academic roots lie in Landscape Architecture, which I studied at Shandong Agricultural University. This background cultivated my deep interest in spatial design, green infrastructure, and urban sustainability.
+
+Through the CASA0023 module, I am eager to bridge the gap between traditional landscape architecture and modern data science. My ultimate goal is to master Remote Sensing techniques—particularly using **R** and **Google Earth Engine (GEE)**—to translate raw Earth Observation (EO) data into actionable, data-driven insights for urban climate mitigation and sustainable planning.
+
+## 
