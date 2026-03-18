@@ -28,5 +28,145 @@
     "crumbs": [
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>Week 1: Introduction to Earth Observation</span>"
     ]
+  },
+  {
+    "objectID": "week2.html",
+    "href": "week2.html",
+    "title": "3  week2",
+    "section": "",
+    "text": "3.1 1. Summary\nThis week’s learning fundamentally shifted my understanding of remote sensing sensors, with a particular focus on the European Space Agency’s (ESA) Sentinel-2 mission. Unlike the conventional public perception of satellite imagery as mere “aerial photographs,” I have come to understand that Sentinel-2’s MultiSpectral Instrument (MSI) is a highly precise scientific tool designed to measure electromagnetic energy across the Earth’s surface. A defining feature of this mission is its twin-satellite configuration (Sentinel-2A and 2B), which achieves a remarkable 5-day revisit cycle at the equator. This high temporal resolution is a game-changer, transitioning remote sensing from static mapping to dynamic, high-frequency time-series analysis.\nTechnically, Sentinel-2 captures data across 13 distinct spectral bands spanning the visible, near-infrared (NIR), and shortwave infrared (SWIR) spectrums, with spatial resolutions varying between 10 m, 20 m, and 60 m depending on the specific band’s physical purpose.\nIndependent Thought & Critical Evaluation: In evaluating optical remote sensors, there is often a pervasive bias toward maximizing spatial resolution. However, reviewing Sentinel-2’s architecture reveals that strategic spectral positioning is frequently more valuable than simply reducing pixel size. For instance, Sentinel-2 sacrifices some spatial detail (20 m) to include three specific red-edge bands (B5–B7). This is a brilliant physical trade-off, as these bands sit exactly where chlorophyll absorption drops off, significantly enhancing the detection of subtle biochemical variations in vegetation. Furthermore, ESA’s provision of Level-2A surface reflectance products represents a crucial step in “data democratization.” By removing the heavy computational burden of complex atmospheric corrections, it allows researchers to focus directly on spatial analysis. Nevertheless, as a critical user, I must remain aware of its limitations: as an optical sensor, it is severely hindered by cloud cover and shadows, and its reliance on automated Level-2A algorithms introduces a “black box” element that requires careful validation in highly polluted urban atmospheres.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>week2</span>"
+    ]
+  },
+  {
+    "objectID": "week2.html#applications",
+    "href": "week2.html#applications",
+    "title": "3  week2",
+    "section": "3.2 2. Applications",
+    "text": "3.2 2. Applications\nThe literature demonstrates that Sentinel-2’s unique spectral and temporal characteristics make it highly versatile across entirely different disciplines. I found two applications particularly compelling.\n\n3.2.1 Urban Radiation Budget and Microclimate\nThe first key application lies in the assessment of urban microclimates. The primary purpose of this research is to evaluate how the expansion of impervious surfaces alters local radiation budgets and exacerbates the Urban Heat Island (UHI) intensity. Researchers achieve this by combining Sentinel-2’s SWIR and NIR bands to compute the Normalized Difference Built-up Index (NDBI):\n$$NDBI = \\frac{SWIR - NIR}{SWIR + NIR}$$\nBecause Sentinel-2 provides 20 m SWIR bands, it offers unparalleled sensitivity to the thermal properties of different building materials. The outcome of such studies is the precise differentiation between highly reflective surfaces (like cool roofs) and heat-absorbing materials (like asphalt). This provides urban planners with actionable, physically grounded insights for heat mitigation and climate-resilient zoning.\n\n\n3.2.2 Disaster Response & Ecological Assessment\nA completely different, yet equally powerful, application is in rapid post-disaster evaluation, specifically concerning forest fire severity. The purpose here is to quickly quantify ecological damage to guide emergency resource allocation. Fernández-Manso et al. (2016) demonstrated that by utilizing Sentinel-2’s novel red-edge spectral indices (such as CIre and PSRI), researchers can classify burn severity with far greater accuracy than traditional SWIR-based Landsat methods. The significance of this application is twofold: physically, the red-edge bands are hyper-sensitive to the sudden degradation of chlorophyll; temporally, the 5-day revisit cycle ensures that damage is assessed immediately before secondary vegetation recovery (green-up) can mask the spectral signature of the disaster.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>week2</span>"
+    ]
+  },
+  {
+    "objectID": "week2.html#reflection",
+    "href": "week2.html#reflection",
+    "title": "3  week2",
+    "section": "3.3 3. Reflection",
+    "text": "3.3 3. Reflection\nReflecting on this week’s content, my biggest takeaway is a profound shift in my scientific perspective. I now fully appreciate that remote sensing is fundamentally an exercise in physics and array mathematics, rather than just geographical illustration. The realization that strategic spectral resolution can unlock more scientific insight than extreme spatial resolution has completely reframed how I will select datasets for future projects.\nFurthermore, building my presentation using Xaringan and R Markdown introduced me to the Open Science paradigm. Integrating text, LaTeX formulas, references, and executable code into a single document ensures a level of transparency and reproducibility that traditional PowerPoint slides simply cannot match. Eliminating the “black-box” nature of research communication is a standard I intend to maintain throughout my academic career.\nLooking toward broader societal contexts, the open-access nature of Sentinel-2 data is a powerful catalyst for researching spatial equity. In my future work, I plan to leverage platforms like Google Earth Engine (GEE) alongside Sentinel-2 time series to monitor green space degradation and surface temperature anomalies. By focusing on low-income or marginalized communities, I aim to provide objective, high-resolution physical data to inform environmental justice initiatives. This synthesis of rigorous physical science and pressing social relevance is exactly the direction I wish to pursue in urban spatial data science.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>week2</span>"
+    ]
+  },
+  {
+    "objectID": "week2.html#references",
+    "href": "week2.html#references",
+    "title": "3  week2",
+    "section": "3.4 References",
+    "text": "3.4 References\n\nFernández-Manso, A., Fernández-Manso, O., & Quintano, C. (2016). Sentinel-2A red-edge spectral indices suitability for estimating burn severity. International Journal of Applied Earth Observation and Geoinformation, 50, 170–185.\nWulder, M. A., Masek, J. G., Cohen, W. B., Loveland, T. R., & Woodcock, C. E. (2012). Opening the archive: How free data has enabled the science and monitoring promise of Landsat. Remote Sensing of Environment, 122, 2–10.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>week2</span>"
+    ]
+  },
+  {
+    "objectID": "week3.html",
+    "href": "week3.html",
+    "title": "4  Week 3 Learning Diary: Corrections and Enhancements",
+    "section": "",
+    "text": "4.1 1. Summary: From Raw Data to Analysis Ready Data (ARD)\nThe core theme of this week was the transition of Earth Observation (EO) data from raw digital numbers (DN) to Analysis Ready Data (ARD). As Andrew noted in the lecture, while modern platforms like Google Earth Engine often provide preprocessed products, understanding the underlying physical corrections remains essential for scientific integrity.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Week 3 Learning Diary: Corrections and Enhancements</span>"
+    ]
+  },
+  {
+    "objectID": "week3.html#summary-from-raw-data-to-analysis-ready-data-ard",
+    "href": "week3.html#summary-from-raw-data-to-analysis-ready-data-ard",
+    "title": "4  Week 3 Learning Diary: Corrections and Enhancements",
+    "section": "",
+    "text": "4.1.1 Key Correction Mechanisms:\n\nGeometric Correction and Orthorectification: This process removes internal and external geometric errors caused by sensor tilt and topographic relief. By using Ground Control Points (GCPs) and Digital Elevation Models (DEMs), pixels are accurately mapped to their true geographic coordinates.\nAtmospheric Correction: This is perhaps the most critical step for urban studies. It accounts for scattering (Rayleigh and Mie) and absorption by atmospheric gases and aerosols. Absolute Correction (e.g., Sen2Cor for Sentinel-2) converts Top of Atmosphere (TOA) radiance to Bottom of Atmosphere (BOA) surface reflectance. Relative Correction (e.g., Dark Object Subtraction) provides a simpler alternative by assuming the darkest pixels should have zero reflectance.\nTopographic Correction: Essential for rugged terrains, this ensures that the same land cover (e.g., a forest) shows consistent spectral signatures regardless of whether it is on a sunlit slope or in a shadow.\n\nIndependent Thought: A significant takeaway this week is the “black box” risk of ARD. While ESA or USGS provide pre-processed products, different algorithms (e.g., DOS vs. 6S) can yield different reflectance values. For urban researchers, choosing the wrong correction level in highly polluted cities could lead to “over-correction,” where urban haze is mistaken for surface features. Therefore, metadata validation is not just a technical step, but a requirement for geographical accuracy.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Week 3 Learning Diary: Corrections and Enhancements</span>"
+    ]
+  },
+  {
+    "objectID": "week3.html#applications-enhancing-urban-heterogeneity",
+    "href": "week3.html#applications-enhancing-urban-heterogeneity",
+    "title": "4  Week 3 Learning Diary: Corrections and Enhancements",
+    "section": "4.2 2. Applications: Enhancing Urban Heterogeneity",
+    "text": "4.2 2. Applications: Enhancing Urban Heterogeneity\nUrban environments are notoriously difficult to classify due to their high spectral heterogeneity. This week, I explored two powerful enhancement techniques to address this:\n\n4.2.1 Principal Component Analysis (PCA)\nPCA serves as a dimensionality reduction tool that transforms highly correlated multi-spectral bands into a smaller set of uncorrelated components.\n\nApplication: In urban change detection, the first principal component (PC1) usually captures the major albedo variations, while subsequent components can highlight subtle changes like new construction or vegetation loss. This reduces computational redundancy while preserving over 90% of the original information.\n\n\n\n4.2.2 Texture Analysis (GLCM)\nUnlike spectral analysis which looks at “what” a pixel is, texture analysis looks at “how” pixels are arranged. Based on the Grey Level Co-occurrence Matrix (GLCM), it measures spatial variations such as contrast, correlation, and entropy.\n\nApplication: This is transformative for distinguishing urban land uses that appear spectrally identical. For example, a high-density informal settlement and a formal industrial warehouse area might both reflect “grey” (concrete/metal) in spectral bands. However, their spatial textures—highly fragmented for settlements versus uniform for warehouses—allow for precise differentiation using GLCM filters.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Week 3 Learning Diary: Corrections and Enhancements</span>"
+    ]
+  },
+  {
+    "objectID": "week3.html#reflection-the-physics-of-better-data",
+    "href": "week3.html#reflection-the-physics-of-better-data",
+    "title": "4  Week 3 Learning Diary: Corrections and Enhancements",
+    "section": "4.3 3. Reflection: The Physics of “Better” Data",
+    "text": "4.3 3. Reflection: The Physics of “Better” Data\nReflecting on this week, I’ve realized that “better” data is not necessarily “higher resolution” data, but “cleaner” and “more transformed” data.\n\nScientific Rigor: The lecture on atmospheric correction reinforced that remote sensing is a physical measurement of energy. If we ignore the atmosphere, we are measuring the “air,” not the “city.” This has made me much more cautious about using raw TOA data for multi-temporal studies.\nMethodological Choice: I was particularly intrigued by the trade-offs between complex physical models and simple empirical methods like DOS. In a resource-constrained project, a “good enough” relative correction might be superior to a complex model that lacks local aerosol data.\nFuture Integration: Moving forward, I plan to integrate Texture Analysis into my group project. Recognizing that spectral signatures alone cannot define the complexity of urban morphology, I see spatial metrics as the bridge between “Remote Sensing” and “Urban Planning.”",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Week 3 Learning Diary: Corrections and Enhancements</span>"
+    ]
+  },
+  {
+    "objectID": "week3.html#references",
+    "href": "week3.html#references",
+    "title": "4  Week 3 Learning Diary: Corrections and Enhancements",
+    "section": "4.4 References",
+    "text": "4.4 References\n\nJensen, J. R. (2015). Introductory Digital Image Processing: A Remote Sensing Perspective. Pearson.\nSchläpfer, D., et al. (2015). Atmospheric Proximal Sensing and Correction for Remote Sensing.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Week 3 Learning Diary: Corrections and Enhancements</span>"
+    ]
+  },
+  {
+    "objectID": "week4.html",
+    "href": "week4.html",
+    "title": "5  Week 4 Learning Diary: Policy Applications - The London Plan",
+    "section": "",
+    "text": "5.1 Summary: Sensor Data & Policy Levels\nThis week, the focus shifted from technical operations, such as image preprocessing and classification, to the strategic use of Earth Observation (EO) data within urban policy frameworks. A key challenge highlighted in class is the frequent disconnect between academic remote sensing research and actionable guidance for local government.\nUrban policies operate across multiple levels:\nFor this exercise, I selected Greater London, focusing on two intersecting policies: Policy G5 (Urban Greening Factor) and Policy SI4 (Managing Heat Risk). The main challenge is that although the Greater London Authority (GLA) sets “net greening” targets to mitigate urban heat islands (UHI), local boroughs require high-resolution spatial evidence to identify vulnerable communities and implement standards effectively.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Week 4 Learning Diary: Policy Applications - The London Plan</span>"
+    ]
+  },
+  {
+    "objectID": "week4.html#summary-sensor-data-policy-levels",
+    "href": "week4.html#summary-sensor-data-policy-levels",
+    "title": "5  Week 4 Learning Diary: Policy Applications - The London Plan",
+    "section": "",
+    "text": "Global agenda: e.g., United Nations Sustainable Development Goal 11 (Sustainable Cities), which sets broad targets for safe, inclusive, and green urban spaces.\nMetropolitan strategy: e.g., The London Plan, providing statutory guidance to address climate risks, including heatwaves.\nLocal implementation: Borough-level authorities must translate strategic goals into practical urban design requirements.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Week 4 Learning Diary: Policy Applications - The London Plan</span>"
+    ]
+  },
+  {
+    "objectID": "week4.html#applications-linking-eo-data-to-the-london-plan",
+    "href": "week4.html#applications-linking-eo-data-to-the-london-plan",
+    "title": "5  Week 4 Learning Diary: Policy Applications - The London Plan",
+    "section": "5.2 Applications: Linking EO Data to The London Plan",
+    "text": "5.2 Applications: Linking EO Data to The London Plan\nTo demonstrate how EO data directly supports climate-resilient planning goals, I generated two spatial datasets for summer 2023 using Google Earth Engine (GEE):\n\nExtracted Normalized Difference Vegetation Index (NDVI) to represent green infrastructure (Policy G5).\n\nExtracted Land Surface Temperature (LST) to represent high-heat risk areas (Policy SI4).\n\n\n5.2.1 Spatial Evidence\n\n\n&lt;img src=\"images/week4_ndvi.jpeg\" alt=\"NDVI Map of Greater London\" style=\"width:100%;\"&gt;\n&lt;sub style=\"font-size:0.8em; line-height:1.2;\"&gt;\n  &lt;strong&gt;Figure 1:&lt;/strong&gt; NDVI map of Greater London (summer 2023), highlighting vegetation coverage. Green areas indicate dense vegetation, providing cooling effects.\n&lt;/sub&gt;\n\n\n&lt;img src=\"images/week4_lst.jpeg\" alt=\"LST Map of Greater London\" style=\"width:100%;\"&gt;\n&lt;sub style=\"font-size:0.8em; line-height:1.2;\"&gt;\n  &lt;strong&gt;Figure 2:&lt;/strong&gt; Land Surface Temperature (LST) map of Greater London (summer 2023). Red areas indicate high heat accumulation, blue/green areas indicate cooler surfaces.\n&lt;/sub&gt;",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Week 4 Learning Diary: Policy Applications - The London Plan</span>"
+    ]
+  },
+  {
+    "objectID": "week4.html#reflection-bridging-pixels-to-planning",
+    "href": "week4.html#reflection-bridging-pixels-to-planning",
+    "title": "5  Week 4 Learning Diary: Policy Applications - The London Plan",
+    "section": "5.3 Reflection: Bridging Pixels to Planning",
+    "text": "5.3 Reflection: Bridging Pixels to Planning\nMapping NDVI and LST only solves ~20% of the challenge. The remaining ~80% involves understanding governance structures: who holds budget authority, which stakeholders influence local decisions, and how EO data can be packaged to save resources and reduce risk for policymakers.\nPolicy interventions also require caution. While investing in green infrastructure is critical, it may trigger green gentrification, raising property prices and potentially displacing vulnerable residents.\nFuture Directions: - Anchor spatial analysis in local government responsibilities and budgets.\n- Transform EO-derived pixels into actionable urban governance tools.\n- Integrate with urban heat resilience, green equity, and disaster risk mapping studies.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Week 4 Learning Diary: Policy Applications - The London Plan</span>"
+    ]
+  },
+  {
+    "objectID": "week4.html#references",
+    "href": "week4.html#references",
+    "title": "5  Week 4 Learning Diary: Policy Applications - The London Plan",
+    "section": "5.4 References",
+    "text": "5.4 References\n\nGLA. (2021). The London Plan: Policies G5 & SI4. Greater London Authority.\n\nESA Sentinel-2. (2023). Sentinel-2 User Handbook. European Space Agency.\n\nWulder, M. A., et al. (2012). Opening the archive: How free data has enabled the science and monitoring promise of Landsat. Remote Sensing of Environment, 122, 2–10.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Week 4 Learning Diary: Policy Applications - The London Plan</span>"
+    ]
   }
 ]

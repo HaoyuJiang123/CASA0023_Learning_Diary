@@ -1,0 +1,54 @@
+---
+title: "Week 3 Learning Diary: Corrections and Enhancements"
+editor: visual
+---
+
+## 1. Summary: From Raw Data to Analysis Ready Data (ARD)
+
+The core theme of this week was the transition of Earth Observation (EO) data from raw digital numbers (DN) to **Analysis Ready Data (ARD)**. As Andrew noted in the lecture, while modern platforms like Google Earth Engine often provide preprocessed products, understanding the underlying physical corrections remains essential for scientific integrity.
+
+### Key Correction Mechanisms:
+
+-   **Geometric Correction and Orthorectification:** This process removes internal and external geometric errors caused by sensor tilt and topographic relief. By using Ground Control Points (GCPs) and Digital Elevation Models (DEMs), pixels are accurately mapped to their true geographic coordinates.
+
+-   **Atmospheric Correction:** This is perhaps the most critical step for urban studies. It accounts for scattering (Rayleigh and Mie) and absorption by atmospheric gases and aerosols. **Absolute Correction** (e.g., Sen2Cor for Sentinel-2) converts Top of Atmosphere (TOA) radiance to Bottom of Atmosphere (BOA) surface reflectance. **Relative Correction** (e.g., Dark Object Subtraction) provides a simpler alternative by assuming the darkest pixels should have zero reflectance.
+
+-   **Topographic Correction:** Essential for rugged terrains, this ensures that the same land cover (e.g., a forest) shows consistent spectral signatures regardless of whether it is on a sunlit slope or in a shadow.
+
+**Independent Thought:** A significant takeaway this week is the "black box" risk of ARD. While ESA or USGS provide pre-processed products, different algorithms (e.g., DOS vs. 6S) can yield different reflectance values. For urban researchers, choosing the wrong correction level in highly polluted cities could lead to "over-correction," where urban haze is mistaken for surface features. Therefore, metadata validation is not just a technical step, but a requirement for geographical accuracy.
+
+------------------------------------------------------------------------
+
+## 2. Applications: Enhancing Urban Heterogeneity
+
+Urban environments are notoriously difficult to classify due to their high spectral heterogeneity. This week, I explored two powerful enhancement techniques to address this:
+
+### Principal Component Analysis (PCA)
+
+PCA serves as a dimensionality reduction tool that transforms highly correlated multi-spectral bands into a smaller set of uncorrelated components.
+
+-   **Application:** In urban change detection, the first principal component (PC1) usually captures the major albedo variations, while subsequent components can highlight subtle changes like new construction or vegetation loss. This reduces computational redundancy while preserving over 90% of the original information.
+
+### Texture Analysis (GLCM)
+
+Unlike spectral analysis which looks at "what" a pixel is, texture analysis looks at "how" pixels are arranged. Based on the Grey Level Co-occurrence Matrix (GLCM), it measures spatial variations such as contrast, correlation, and entropy.
+
+-   **Application:** This is transformative for distinguishing urban land uses that appear spectrally identical. For example, a high-density informal settlement and a formal industrial warehouse area might both reflect "grey" (concrete/metal) in spectral bands. However, their spatial textures—highly fragmented for settlements versus uniform for warehouses—allow for precise differentiation using GLCM filters.
+
+------------------------------------------------------------------------
+
+## 3. Reflection: The Physics of "Better" Data
+
+Reflecting on this week, I’ve realized that "better" data is not necessarily "higher resolution" data, but "cleaner" and "more transformed" data.
+
+-   **Scientific Rigor:** The lecture on atmospheric correction reinforced that remote sensing is a physical measurement of energy. If we ignore the atmosphere, we are measuring the "air," not the "city." This has made me much more cautious about using raw TOA data for multi-temporal studies.
+
+-   **Methodological Choice:** I was particularly intrigued by the trade-offs between complex physical models and simple empirical methods like DOS. In a resource-constrained project, a "good enough" relative correction might be superior to a complex model that lacks local aerosol data.
+
+-   **Future Integration:** Moving forward, I plan to integrate **Texture Analysis** into my group project. Recognizing that spectral signatures alone cannot define the complexity of urban morphology, I see spatial metrics as the bridge between "Remote Sensing" and "Urban Planning."
+
+## References
+
+-   **Jensen, J. R. (2015).** *Introductory Digital Image Processing: A Remote Sensing Perspective*. Pearson.
+
+-   **Schläpfer, D., et al. (2015).** *Atmospheric Proximal Sensing and Correction for Remote Sensing*.
