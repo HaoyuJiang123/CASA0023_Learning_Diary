@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Haoyu Jiang">
 
-<title>CASA0023 Learning Diary</title>
+<title>6&nbsp; week5 – CASA0023 Learning Diary</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -31,7 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./week1.html" rel="next">
+<link href="./week4.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -82,7 +81,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">CASA0023 Learning Diary</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week5.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">week5</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -109,7 +108,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">CASA0023 Learning Diary</span></span></a>
   </div>
 </li>
@@ -139,7 +138,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week5.html" class="sidebar-item-text sidebar-link">
+  <a href="./week5.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">week5</span></span></a>
   </div>
 </li>
@@ -149,10 +148,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul class="collapse">
-  <li><a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome"><span class="header-section-number">1</span> Welcome</a>
-  <ul class="collapse">
-  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"><span class="header-section-number">1.1</span> </a></li>
-  </ul></li>
+  <li><a href="#application" id="toc-application" class="nav-link active" data-scroll-target="#application"><span class="header-section-number">6.1</span> Application</a></li>
+  <li><a href="#reflection" id="toc-reflection" class="nav-link" data-scroll-target="#reflection"><span class="header-section-number">6.2</span> Reflection</a></li>
   </ul>
 </nav>
 </nav>
@@ -165,19 +162,13 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">CASA0023 Learning Diary</h1>
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">week5</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Haoyu Jiang </p>
-          </div>
-  </div>
     
   
     
@@ -188,16 +179,34 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="welcome" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Welcome</h1>
-<p>Hi, I am <strong>Haoyu Jiang</strong>, currently pursuing a Master’s degree in Urban Spatial Science at UCL CASA.<br>
-My academic roots lie in Landscape Architecture, which I studied at Shandong Agricultural University. This background cultivated my deep interest in spatial design, green infrastructure, and urban sustainability.</p>
-<p>Through the CASA0023 module, I am eager to bridge the gap between traditional landscape architecture and modern data science. My ultimate goal is to master Remote Sensing techniques—particularly using <strong>R</strong> and <strong>Google Earth Engine (GEE)</strong>—to translate raw Earth Observation (EO) data into actionable, data-driven insights for urban climate mitigation and sustainable planning.</p>
-<section id="section" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="section"><span class="header-section-number">1.1</span> </h2>
-
-
+<p>## Summary</p>
+<p>This week marked a critical transition from local, hardware-dependent processing (e.g., in R or QGIS) to cloud-based, planetary-scale analysis using **Google Earth Engine (GEE)**. The core of this week’s learning was understanding GEE’s fundamental architecture, specifically the distinction between the **Client-side** and the **Server-side**.</p>
+<p>Key conceptual shifts included:</p>
+<p><u>*</u> **The Client/Server Model:** The JavaScript code written in the browser (Client) acts merely as a set of instructions. These instructions are sent to Google’s supercomputers (Server), where the heavy lifting occurs, and only the final visualised pixels or statistics are returned. <u>*</u> **Iteration without Loops:** I learned to abandon traditional `for-loops`—which are inefficient and prone to crashing when handling large spatial datasets—in favour of the `.map()` function. This allows operations (like cloud masking) to be applied across thousands of images simultaneously. <u>*</u> **Reducers and Scale:** GEE handles spatial and temporal aggregation through *Reducers* (e.g., using `.median()` to composite a cloud-free image). Crucially, GEE employs a **pyramiding policy**, dynamically adjusting the computation scale (resolution) based on the zoom level, which is fundamentally different from static local processing.</p>
+<section id="application" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="application"><span class="header-section-number">6.1</span> Application</h2>
+<p>While my Week 4 diary explored the *spatial* distribution of urban indices, the true analytical power of an `ee.ImageCollection` lies in its *temporal* depth. To demonstrate this, I applied this week’s concepts to monitor the long-term vegetation dynamics of Richmond Park, London.</p>
+<p>Instead of downloading gigabytes of Sentinel-2 data to plot a trend locally, I used GEE’s `ui.Chart` function alongside a temporal Reducer to instantly process 5 years of surface reflectance data (2019–2023) directly on the server.</p>
+<div id="fig-chart" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-chart-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<p>![](images/ee-chart.png){width=85% fig-align=“center”}</p>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chart-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.1: Figure 1: A 5-year NDVI time-series chart for Richmond Park, generated directly in GEE. The chart captures the seasonal phenology (summer peaks and winter troughs) and allows policymakers to identify abnormal drops in vegetation health due to specific climatic events.
+</figcaption>
+</figure>
+</div>
+<p>This application proves that GEE is not merely a mapping tool, but a highly efficient **monitoring dashboard**. For policymakers (referencing last week’s focus on the London Plan), such temporal charts provide immediate evidence on whether urban greening initiatives are thriving or degrading over the years.</p>
 </section>
+<section id="reflection" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="reflection"><span class="header-section-number">6.2</span> Reflection</h2>
+<p>Reflecting on this week’s coding exercises, my “Aha!” moment was realising the sheer scale of computation happening behind the scenes. In previous weeks, downloading, atmospheric correcting, and processing a single Landsat scene in R required significant time and memory. In GEE, computing a 5-year NDVI trend takes mere seconds.</p>
+<p>The most profound takeaway is the **democratisation of spatial data**. GEE removes the financial and hardware barriers to Earth Observation. A researcher or a local municipality in a developing nation with only a basic laptop and an internet connection now has the exact same analytical power as a well-funded western institution.</p>
+<p>However, critical evaluation is necessary. GEE relies on a highly specific JavaScript API, resulting in a steep learning curve and a significant risk of **“vendor lock-in”**—relying entirely on Google’s proprietary infrastructure. If Google decides to charge for this service or alter the API, decades of open-source research workflows could be disrupted. Furthermore, while GEE excels at pixel-based algebra and data reduction (turning petabytes into megabytes), traditional topological vector operations (like complex spatial joins or network analysis) are still better suited for desktop GIS software.</p>
+<p>Moving forward, I view GEE as the ultimate “first step” in the spatial pipeline: a tool to reduce planetary data into manageable trends and layers, which can then be exported for fine-tuned, localised policy analysis.</p>
+
+
 </section>
 
 </main> <!-- /main -->
@@ -602,11 +611,11 @@ My academic roots lie in Landscape Architecture, which I studied at Shandong Agr
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./week4.html" class="pagination-link" aria-label="Week 4 Learning Diary: Policy Applications - The London Plan">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Week 4 Learning Diary: Policy Applications - The London Plan</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./week1.html" class="pagination-link" aria-label="Week 1: Introduction to Earth Observation">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Week 1: Introduction to Earth Observation</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->

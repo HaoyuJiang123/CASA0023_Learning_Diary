@@ -168,5 +168,105 @@
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Week 4 Learning Diary: Policy Applications - The London Plan</span>"
     ]
+  },
+  {
+    "objectID": "week5.html",
+    "href": "week5.html",
+    "title": "6  week5",
+    "section": "",
+    "text": "6.1 Application\n## Summary\nThis week marked a critical transition from local, hardware-dependent processing (e.g., in R or QGIS) to cloud-based, planetary-scale analysis using **Google Earth Engine (GEE)**. The core of this week’s learning was understanding GEE’s fundamental architecture, specifically the distinction between the **Client-side** and the **Server-side**.\nKey conceptual shifts included:\n* **The Client/Server Model:** The JavaScript code written in the browser (Client) acts merely as a set of instructions. These instructions are sent to Google’s supercomputers (Server), where the heavy lifting occurs, and only the final visualised pixels or statistics are returned. * **Iteration without Loops:** I learned to abandon traditional `for-loops`—which are inefficient and prone to crashing when handling large spatial datasets—in favour of the `.map()` function. This allows operations (like cloud masking) to be applied across thousands of images simultaneously. * **Reducers and Scale:** GEE handles spatial and temporal aggregation through *Reducers* (e.g., using `.median()` to composite a cloud-free image). Crucially, GEE employs a **pyramiding policy**, dynamically adjusting the computation scale (resolution) based on the zoom level, which is fundamentally different from static local processing.\nWhile my Week 4 diary explored the *spatial* distribution of urban indices, the true analytical power of an `ee.ImageCollection` lies in its *temporal* depth. To demonstrate this, I applied this week’s concepts to monitor the long-term vegetation dynamics of Richmond Park, London.\nInstead of downloading gigabytes of Sentinel-2 data to plot a trend locally, I used GEE’s `ui.Chart` function alongside a temporal Reducer to instantly process 5 years of surface reflectance data (2019–2023) directly on the server.\nThis application proves that GEE is not merely a mapping tool, but a highly efficient **monitoring dashboard**. For policymakers (referencing last week’s focus on the London Plan), such temporal charts provide immediate evidence on whether urban greening initiatives are thriving or degrading over the years.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>week5</span>"
+    ]
+  },
+  {
+    "objectID": "week5.html#application",
+    "href": "week5.html#application",
+    "title": "6  week5",
+    "section": "",
+    "text": "![](images/ee-chart.png){width=85% fig-align=“center”}\n\n\nFigure 6.1: Figure 1: A 5-year NDVI time-series chart for Richmond Park, generated directly in GEE. The chart captures the seasonal phenology (summer peaks and winter troughs) and allows policymakers to identify abnormal drops in vegetation health due to specific climatic events.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>week5</span>"
+    ]
+  },
+  {
+    "objectID": "week5.html#reflection",
+    "href": "week5.html#reflection",
+    "title": "6  week5",
+    "section": "6.2 Reflection",
+    "text": "6.2 Reflection\nReflecting on this week’s coding exercises, my “Aha!” moment was realising the sheer scale of computation happening behind the scenes. In previous weeks, downloading, atmospheric correcting, and processing a single Landsat scene in R required significant time and memory. In GEE, computing a 5-year NDVI trend takes mere seconds.\nThe most profound takeaway is the **democratisation of spatial data**. GEE removes the financial and hardware barriers to Earth Observation. A researcher or a local municipality in a developing nation with only a basic laptop and an internet connection now has the exact same analytical power as a well-funded western institution.\nHowever, critical evaluation is necessary. GEE relies on a highly specific JavaScript API, resulting in a steep learning curve and a significant risk of **“vendor lock-in”**—relying entirely on Google’s proprietary infrastructure. If Google decides to charge for this service or alter the API, decades of open-source research workflows could be disrupted. Furthermore, while GEE excels at pixel-based algebra and data reduction (turning petabytes into megabytes), traditional topological vector operations (like complex spatial joins or network analysis) are still better suited for desktop GIS software.\nMoving forward, I view GEE as the ultimate “first step” in the spatial pipeline: a tool to reduce planetary data into manageable trends and layers, which can then be exported for fine-tuned, localised policy analysis.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>week5</span>"
+    ]
+  },
+  {
+    "objectID": "week6.html",
+    "href": "week6.html",
+    "title": "7  Week 6: Machine Learning and Land Cover Classification",
+    "section": "",
+    "text": "7.1 Summary\nThis week marked a conceptual shift from calculating continuous pixel values (like NDVI or LST) to categorising pixels into discrete Land Use/Land Cover (LULC) classes using Machine Learning (ML). The core focus was on Supervised Classification, where an algorithm is trained on labelled data to identify features based on their spectral signatures.\nWe explored various classifiers, with a strong emphasis on the Random Forest (RF) algorithm. Unlike a single Decision Tree (CART), which is prone to overfitting and highly sensitive to training data anomalies, a Random Forest creates an “ensemble” of many independent trees through Bagging (Bootstrap Aggregating). By taking the “majority vote” from these trees, RF significantly improves classification stability and accuracy. As highlighted in the lecture, there is an inherent interpretability-accuracy tradeoff: while RF provides higher accuracy, it operates more as a “black box” compared to the transparent logic of a single decision tree.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Week 6: Machine Learning and Land Cover Classification</span>"
+    ]
+  },
+  {
+    "objectID": "week6.html#application",
+    "href": "week6.html#application",
+    "title": "7  Week 6: Machine Learning and Land Cover Classification",
+    "section": "7.2 Application",
+    "text": "7.2 Application\nTo put these ML concepts into practice, I utilised Google Earth Engine to perform a land cover classification for Greater London, using a cloud-free median composite of Sentinel-2 imagery (Summer 2023). I defined training samples across three primary classes: Water, Urban/Built-up, and Vegetation, and trained an ee.Classifier.smileRandomForest() model with 50 trees.\n\n\n\n\n\n\nFigure 7.1: Figure 1: Land cover classification of Greater London using a Random Forest classifier in GEE. The model delineates water bodies (blue), dense urban structures (red), and vegetation/greenbelts (green) against a clean background to highlight spatial boundaries.\n\n\n\nAs shown in Figure 1, the algorithm successfully captured the winding path of the River Thames, the dense concrete footprint of Central London, and the extensive natural reserves like Richmond Park and the Metropolitan Green Belt.\nFrom a policy perspective, this discrete mapping is essential. For instance, local planners at the Greater London Authority (GLA) cannot easily feed continuous NDVI values into a housing development model. They require distinct categorical boundaries—such as distinguishing “Built-up areas” from protected “Greenbelts”—to calculate the percentage of permeable surfaces for flood risk assessments, or to legally track urban sprawl and illegal development over time.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Week 6: Machine Learning and Land Cover Classification</span>"
+    ]
+  },
+  {
+    "objectID": "week6.html#reflection",
+    "href": "week6.html#reflection",
+    "title": "7  Week 6: Machine Learning and Land Cover Classification",
+    "section": "7.3 Reflection",
+    "text": "7.3 Reflection\nThe most striking lesson this week was the absolute truth of the “Garbage In, Garbage Out” (GIGO) principle. Despite its mathematical sophistication, the Random Forest algorithm is entirely at the mercy of the training data’s purity and representative power.\nPixel-based classification inherently lacks Spatial Context. It processes each pixel as a silo, which is why it struggles with the “salt-and-pepper” noise seen in my first attempt. This week taught me that as a spatial analyst, my role is not just to “run the code,” but to critically interrogate the spectral overlap between classes and validate outputs against geographical reality. This experience provides a perfect logical bridge to Week 7, where I will move beyond isolated pixels to explore Object-Based Image Analysis (OBIA) to further refine these spatial boundaries.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Week 6: Machine Learning and Land Cover Classification</span>"
+    ]
+  },
+  {
+    "objectID": "week6.html#application-from-spectral-confusion-to-refined-mapping",
+    "href": "week6.html#application-from-spectral-confusion-to-refined-mapping",
+    "title": "7  Week 6: Machine Learning and Land Cover Classification",
+    "section": "7.2 Application: From Spectral Confusion to Refined Mapping",
+    "text": "7.2 Application: From Spectral Confusion to Refined Mapping\nTo implement the RF algorithm, I utilised Google Earth Engine (GEE) to classify Greater London into three primary classes: Water (blue), Urban (red), and Vegetation (green). My methodology involved an iterative refinement process to overcome initial technical hurdles.\n\n\n\n\n\n\n\n\n\nFigure 7.1: Initial: Spectral Confusion (Shadows as Water)\n\n\n\n\n\n\n\n\n\n\n\nFigure 7.2: Refined: Corrected with NDWI and Balanced Samples\n\n\n\n\n\n\nFigure 1: Comparison of Machine Learning iterations. The refined model (right) effectively resolved the initial misclassification of urban shadows as water bodies.\nFigure 1: Comparison of Machine Learning iterations in GEE.\nAs observed in initial, the initial pixel-based model suffered from significant Spectral Confusion. Because the model only examined individual 10m cells in isolation, it failed to distinguish between the low-reflectance values of building shadows in Central London and the River Thames, resulting in a “noisy” and geographically inaccurate “flooded” output.\nTo resolve this, I re-engineered the model by:\n\nIncorporating the NDWI band: Adding the Normalized Difference Water Index forced a spectral separation between aquatic features and terrestrial shadows.\nTargeted Sampling: I provided the Random Forest with specific “shadow-urban” training points, teaching the model to recognise that dark pixels within high-density built environments are statistically more likely to be shadows than water bodies.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Week 6: Machine Learning and Land Cover Classification</span>"
+    ]
+  },
+  {
+    "objectID": "week7.html",
+    "href": "week7.html",
+    "title": "8  Week 7: Advanced Classification",
+    "section": "",
+    "text": "8.1 Summary\nThis week’s lecture progressed from basic pixel-based Machine Learning to Object-Based Image Analysis (OBIA) and the critical evaluation of classification validity.\nThe primary conceptual shift involved moving away from the assumption that every pixel is independent. Instead, we explored Simple Non-Iterative Clustering (SNIC), which groups pixels into homogenous “superpixels” based on spectral similarity and spatial distance. Furthermore, we addressed Accuracy Assessment, learning that a map is only as good as its validation. We moved beyond simple percentages to use Confusion Matrices, evaluating Producer’s Accuracy (the probability that a ground feature is correctly classified) and User’s Accuracy (the reliability of the map for the end user).",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Week 7: Advanced Classification</span>"
+    ]
+  },
+  {
+    "objectID": "week7.html#application",
+    "href": "week7.html#application",
+    "title": "8  Week 7: Advanced Classification",
+    "section": "8.2 Application",
+    "text": "8.2 Application\nTo refine the noisy results from Week 6, I implemented an OBIA approach for Greater London. I utilised the SNIC algorithm to segment Sentinel-2 imagery into objects. By adjusting the compactness and seedGrid parameters, I generated superpixels that adhered more closely to physical urban boundaries, such as the River Thames and large parklands.\n\n\n\n\n\n\n\n\n\nFigure 8.1: Validation Confusion Matrix and Overall Accuracy\n\n\n\n\n\n\n\n\n\n\n\nFigure 8.2: OBIA Land Cover Classification of Greater London\n\n\n\n\n\n\nAs shown in @fig-matrix, the model achieved an Overall Accuracy of 99.6%. From a technical perspective, this indicates near-perfect alignment between the training data and the classified output. This high-fidelity discrete mapping is essential for urban policy applications, such as tracking Urban Sprawl or managing Greenbelt boundaries, where contiguous polygons are more useful for legal planning than fragmented pixels.",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Week 7: Advanced Classification</span>"
+    ]
+  },
+  {
+    "objectID": "week7.html#reflection-the-spatial-autocorrelation-pitfall",
+    "href": "week7.html#reflection-the-spatial-autocorrelation-pitfall",
+    "title": "8  Week 7: Advanced Classification",
+    "section": "8.3 Reflection: The Spatial Autocorrelation Pitfall",
+    "text": "8.3 Reflection: The Spatial Autocorrelation Pitfall\nThe most striking lesson from this week was the warning against the “Illusion of Accuracy.” While a 0.99 OA (Overall Accuracy) appears excellent, it often signals a failure to account for Spatial Autocorrelation (Tobler’s First Law).\nIn my practical, the validation points were extracted from the same buffered polygons used for training. Because “near things are more related than distant things,” the testing data likely provided a “sneak preview” of the training signatures, leading to artificially inflated accuracy. As Karasiak et al. (2022) argued, this is a common pitfall in remote sensing.\nFurthermore, I engaged with the academic debate regarding the Kappa Coefficient. Despite being a standard metric, the lecture highlighted calls to abandon it because its results are often redundant or misinterpreted. This week taught me that as a spatial analyst, my role is to critically interrogate the statistical independence of my validation sets rather than simply chasing a perfect score.",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Week 7: Advanced Classification</span>"
+    ]
   }
 ]

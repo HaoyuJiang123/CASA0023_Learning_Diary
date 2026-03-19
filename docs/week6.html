@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Haoyu Jiang">
 
-<title>CASA0023 Learning Diary</title>
+<title>7&nbsp; Week 6: Machine Learning and Land Cover Classification – CASA0023 Learning Diary</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -31,7 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./week1.html" rel="next">
+<link href="./week7.html" rel="next">
+<link href="./week5.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -82,7 +82,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">CASA0023 Learning Diary</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week6.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Week 6: Machine Learning and Land Cover Classification</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -109,7 +109,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">CASA0023 Learning Diary</span></span></a>
   </div>
 </li>
@@ -143,16 +143,27 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">week5</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week6.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Week 6: Machine Learning and Land Cover Classification</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Week 7: Advanced Classification</span></span></a>
+  </div>
+</li>
     </ul>
     </div>
     <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Table of contents</h2>
    
   <ul class="collapse">
-  <li><a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome"><span class="header-section-number">1</span> Welcome</a>
-  <ul class="collapse">
-  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"><span class="header-section-number">1.1</span> </a></li>
-  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary"><span class="header-section-number">7.1</span> Summary</a></li>
+  <li><a href="#application-from-spectral-confusion-to-refined-mapping" id="toc-application-from-spectral-confusion-to-refined-mapping" class="nav-link" data-scroll-target="#application-from-spectral-confusion-to-refined-mapping"><span class="header-section-number">7.2</span> Application: From Spectral Confusion to Refined Mapping</a></li>
+  <li><a href="#reflection" id="toc-reflection" class="nav-link" data-scroll-target="#reflection"><span class="header-section-number">7.3</span> Reflection</a></li>
   </ul>
 </nav>
 </nav>
@@ -165,19 +176,13 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">CASA0023 Learning Diary</h1>
+<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Week 6: Machine Learning and Land Cover Classification</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Haoyu Jiang </p>
-          </div>
-  </div>
     
   
     
@@ -188,16 +193,57 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="welcome" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Welcome</h1>
-<p>Hi, I am <strong>Haoyu Jiang</strong>, currently pursuing a Master’s degree in Urban Spatial Science at UCL CASA.<br>
-My academic roots lie in Landscape Architecture, which I studied at Shandong Agricultural University. This background cultivated my deep interest in spatial design, green infrastructure, and urban sustainability.</p>
-<p>Through the CASA0023 module, I am eager to bridge the gap between traditional landscape architecture and modern data science. My ultimate goal is to master Remote Sensing techniques—particularly using <strong>R</strong> and <strong>Google Earth Engine (GEE)</strong>—to translate raw Earth Observation (EO) data into actionable, data-driven insights for urban climate mitigation and sustainable planning.</p>
-<section id="section" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="section"><span class="header-section-number">1.1</span> </h2>
-
-
+<section id="summary" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="summary"><span class="header-section-number">7.1</span> Summary</h2>
+<p>This week marked a conceptual shift from calculating continuous pixel values (like NDVI or LST) to categorising pixels into discrete <strong>Land Use/Land Cover (LULC)</strong> classes using Machine Learning (ML). The core focus was on <strong>Supervised Classification</strong>, where an algorithm is trained on labelled data to identify features based on their spectral signatures.</p>
+<p>We explored various classifiers, with a strong emphasis on the <strong>Random Forest (RF)</strong> algorithm. Unlike a single <strong>Decision Tree (CART)</strong>, which is prone to overfitting and highly sensitive to training data anomalies, a Random Forest creates an “ensemble” of many independent trees through <strong>Bagging (Bootstrap Aggregating)</strong>. By taking the “majority vote” from these trees, RF significantly improves classification stability and accuracy. As highlighted in the lecture, there is an inherent <strong>interpretability-accuracy tradeoff</strong>: while RF provides higher accuracy, it operates more as a “black box” compared to the transparent logic of a single decision tree.</p>
 </section>
+<section id="application-from-spectral-confusion-to-refined-mapping" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="application-from-spectral-confusion-to-refined-mapping"><span class="header-section-number">7.2</span> Application: From Spectral Confusion to Refined Mapping</h2>
+<p>To implement the RF algorithm, I utilised Google Earth Engine (GEE) to classify Greater London into three primary classes: <strong>Water</strong> (blue), <strong>Urban</strong> (red), and <strong>Vegetation</strong> (green). My methodology involved an iterative refinement process to overcome initial technical hurdles.</p>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-initial" class="quarto-float quarto-figure quarto-figure-left anchored" data-fig-align="left">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-initial-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/week6_classification.png" class="img-fluid quarto-figure quarto-figure-left figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-initial-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.1: Initial: Spectral Confusion (Shadows as Water)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-final" class="quarto-float quarto-figure quarto-figure-right anchored" data-fig-align="right">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-final-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/week62.png" class="img-fluid quarto-figure quarto-figure-right figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-final-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.2: Refined: Corrected with NDWI and Balanced Samples
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>Figure 1: Comparison of Machine Learning iterations. The refined model (right) effectively resolved the initial misclassification of urban shadows as water bodies.</p>
+<p><strong>Figure 1:</strong> Comparison of Machine Learning iterations in GEE.</p>
+<p>As observed in initial, the initial pixel-based model suffered from significant <strong>Spectral Confusion</strong>. Because the model only examined individual 10m cells in isolation, it failed to distinguish between the low-reflectance values of <strong>building shadows</strong> in Central London and the <strong>River Thames</strong>, resulting in a “noisy” and geographically inaccurate “flooded” output.</p>
+<p>To resolve this, I re-engineered the model by:</p>
+<ol type="1">
+<li><p><strong>Incorporating the NDWI band:</strong> Adding the Normalized Difference Water Index forced a spectral separation between aquatic features and terrestrial shadows.</p></li>
+<li><p><strong>Targeted Sampling:</strong> I provided the Random Forest with specific “shadow-urban” training points, teaching the model to recognise that dark pixels within high-density built environments are statistically more likely to be shadows than water bodies.</p></li>
+</ol>
+</section>
+<section id="reflection" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="reflection"><span class="header-section-number">7.3</span> Reflection</h2>
+<p>The most striking lesson this week was the absolute truth of the <strong>“Garbage In, Garbage Out” (GIGO)</strong> principle. Despite its mathematical sophistication, the Random Forest algorithm is entirely at the mercy of the training data’s purity and representative power.</p>
+<p>Pixel-based classification inherently lacks <strong>Spatial Context</strong>. It processes each pixel as a silo, which is why it struggles with the “salt-and-pepper” noise seen in my first attempt. This week taught me that as a spatial analyst, my role is not just to “run the code,” but to critically interrogate the spectral overlap between classes and validate outputs against geographical reality. This experience provides a perfect logical bridge to <strong>Week 7</strong>, where I will move beyond isolated pixels to explore <strong>Object-Based Image Analysis (OBIA)</strong> to further refine these spatial boundaries.</p>
+
+
 </section>
 
 </main> <!-- /main -->
@@ -602,10 +648,13 @@ My academic roots lie in Landscape Architecture, which I studied at Shandong Agr
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./week5.html" class="pagination-link" aria-label="week5">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">week5</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./week1.html" class="pagination-link" aria-label="Week 1: Introduction to Earth Observation">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Week 1: Introduction to Earth Observation</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./week7.html" class="pagination-link" aria-label="Week 7: Advanced Classification">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Week 7: Advanced Classification</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

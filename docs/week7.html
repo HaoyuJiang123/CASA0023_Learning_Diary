@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Haoyu Jiang">
 
-<title>CASA0023 Learning Diary</title>
+<title>8&nbsp; Week 7: Advanced Classification – CASA0023 Learning Diary</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -31,7 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./week1.html" rel="next">
+<link href="./week6.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -82,7 +81,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">CASA0023 Learning Diary</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week7.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Week 7: Advanced Classification</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -109,7 +108,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">CASA0023 Learning Diary</span></span></a>
   </div>
 </li>
@@ -143,16 +142,27 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">week5</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Week 6: Machine Learning and Land Cover Classification</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week7.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Week 7: Advanced Classification</span></span></a>
+  </div>
+</li>
     </ul>
     </div>
     <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Table of contents</h2>
    
   <ul class="collapse">
-  <li><a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome"><span class="header-section-number">1</span> Welcome</a>
-  <ul class="collapse">
-  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"><span class="header-section-number">1.1</span> </a></li>
-  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary"><span class="header-section-number">8.1</span> Summary</a></li>
+  <li><a href="#application" id="toc-application" class="nav-link" data-scroll-target="#application"><span class="header-section-number">8.2</span> Application</a></li>
+  <li><a href="#reflection-the-spatial-autocorrelation-pitfall" id="toc-reflection-the-spatial-autocorrelation-pitfall" class="nav-link" data-scroll-target="#reflection-the-spatial-autocorrelation-pitfall"><span class="header-section-number">8.3</span> Reflection: The Spatial Autocorrelation Pitfall</a></li>
   </ul>
 </nav>
 </nav>
@@ -165,19 +175,13 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">CASA0023 Learning Diary</h1>
+<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Week 7: Advanced Classification</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Haoyu Jiang </p>
-          </div>
-  </div>
     
   
     
@@ -188,16 +192,51 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="welcome" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Welcome</h1>
-<p>Hi, I am <strong>Haoyu Jiang</strong>, currently pursuing a Master’s degree in Urban Spatial Science at UCL CASA.<br>
-My academic roots lie in Landscape Architecture, which I studied at Shandong Agricultural University. This background cultivated my deep interest in spatial design, green infrastructure, and urban sustainability.</p>
-<p>Through the CASA0023 module, I am eager to bridge the gap between traditional landscape architecture and modern data science. My ultimate goal is to master Remote Sensing techniques—particularly using <strong>R</strong> and <strong>Google Earth Engine (GEE)</strong>—to translate raw Earth Observation (EO) data into actionable, data-driven insights for urban climate mitigation and sustainable planning.</p>
-<section id="section" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="section"><span class="header-section-number">1.1</span> </h2>
-
-
+<section id="summary" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="summary"><span class="header-section-number">8.1</span> Summary</h2>
+<p>This week’s lecture progressed from basic pixel-based Machine Learning to <strong>Object-Based Image Analysis (OBIA)</strong> and the critical evaluation of classification validity.</p>
+<p>The primary conceptual shift involved moving away from the assumption that every pixel is independent. Instead, we explored <strong>Simple Non-Iterative Clustering (SNIC)</strong>, which groups pixels into homogenous “superpixels” based on spectral similarity and spatial distance. Furthermore, we addressed <strong>Accuracy Assessment</strong>, learning that a map is only as good as its validation. We moved beyond simple percentages to use <strong>Confusion Matrices</strong>, evaluating <strong>Producer’s Accuracy</strong> (the probability that a ground feature is correctly classified) and <strong>User’s Accuracy</strong> (the reliability of the map for the end user).</p>
 </section>
+<section id="application" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="application"><span class="header-section-number">8.2</span> Application</h2>
+<p>To refine the noisy results from Week 6, I implemented an OBIA approach for Greater London. I utilised the <strong>SNIC algorithm</strong> to segment Sentinel-2 imagery into objects. By adjusting the <code>compactness</code> and <code>seedGrid</code> parameters, I generated superpixels that adhered more closely to physical urban boundaries, such as the River Thames and large parklands.</p>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-initial" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-initial-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/matrix.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-initial-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.1: Validation Confusion Matrix and Overall Accuracy
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-final" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-final-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/8.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-final-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.2: OBIA Land Cover Classification of Greater London
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>As shown in @fig-matrix, the model achieved an <strong>Overall Accuracy of 99.6%</strong>. From a technical perspective, this indicates near-perfect alignment between the training data and the classified output. This high-fidelity discrete mapping is essential for urban policy applications, such as tracking <strong>Urban Sprawl</strong> or managing <strong>Greenbelt boundaries</strong>, where contiguous polygons are more useful for legal planning than fragmented pixels.</p>
+</section>
+<section id="reflection-the-spatial-autocorrelation-pitfall" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="reflection-the-spatial-autocorrelation-pitfall"><span class="header-section-number">8.3</span> Reflection: The Spatial Autocorrelation Pitfall</h2>
+<p>The most striking lesson from this week was the warning against the <strong>“Illusion of Accuracy.”</strong> While a 0.99 OA (Overall Accuracy) appears excellent, it often signals a failure to account for <strong>Spatial Autocorrelation (Tobler’s First Law)</strong>.</p>
+<p>In my practical, the validation points were extracted from the same buffered polygons used for training. Because “near things are more related than distant things,” the testing data likely provided a <strong>“sneak preview”</strong> of the training signatures, leading to artificially inflated accuracy. As Karasiak et al.&nbsp;(2022) argued, this is a common pitfall in remote sensing.</p>
+<p>Furthermore, I engaged with the academic debate regarding the <strong>Kappa Coefficient</strong>. Despite being a standard metric, the lecture highlighted calls to abandon it because its results are often redundant or misinterpreted. This week taught me that as a spatial analyst, my role is to critically interrogate the <em>statistical independence</em> of my validation sets rather than simply chasing a perfect score.</p>
+
+
 </section>
 
 </main> <!-- /main -->
@@ -602,11 +641,11 @@ My academic roots lie in Landscape Architecture, which I studied at Shandong Agr
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./week6.html" class="pagination-link" aria-label="Week 6: Machine Learning and Land Cover Classification">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Week 6: Machine Learning and Land Cover Classification</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./week1.html" class="pagination-link" aria-label="Week 1: Introduction to Earth Observation">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Week 1: Introduction to Earth Observation</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->
