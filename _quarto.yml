@@ -5,6 +5,7 @@ project:
 book:
   title: "CASA0023 Learning Diary"
   author: "Haoyu Jiang"
+  date: "2026/2/19"
   chapters:
     - index.qmd
     - week1.qmd
@@ -20,9 +21,13 @@ book:
 
 format:
   html:
+    theme:
+      - cosmo
+      - custom.scss
     toc: true
-    toc-depth: 2
-    toc-location: left
-    theme: cosmo
+    toc-depth: 3
+    number-sections: false
+    smooth-scroll: true
     code-fold: true
 
+editor: visual

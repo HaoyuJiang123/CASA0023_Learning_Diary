@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>7&nbsp; Week 6: Machine Learning and Land Cover Classification – CASA0023 Learning Diary</title>
+<title>Week 6: Machine Learning and Land Cover Classification – CASA0023 Learning Diary</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -69,6 +69,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<style>html{ scroll-behavior: smooth; }</style>
 
 
 </head>
@@ -82,7 +83,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week6.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Week 6: Machine Learning and Land Cover Classification</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week6.html"><span class="chapter-title">Week 6: Machine Learning and Land Cover Classification</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -109,74 +110,66 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">CASA0023 Learning Diary</span></span></a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">CASA0023 Learning Diary</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Week 1: Introduction to Earth Observation</span></span></a>
+  <a href="./week1.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 1: Introduction to Earth Observation</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">week2</span></span></a>
+  <a href="./week2.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">week2</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week3.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Week 3 Learning Diary: Corrections and Enhancements</span></span></a>
+  <a href="./week3.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 3 Learning Diary: Corrections and Enhancements</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week4.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Week 4 Learning Diary: Policy Applications - The London Plan</span></span></a>
+  <a href="./week4.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 4 Learning Diary: Policy Applications - The London Plan</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week5.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">week5</span></span></a>
+  <a href="./week5.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">week5</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week6.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Week 6: Machine Learning and Land Cover Classification</span></span></a>
+  <a href="./week6.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Week 6: Machine Learning and Land Cover Classification</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week7.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Week 7: Advanced Classification</span></span></a>
+  <a href="./week7.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 7: Advanced Classification</span></a>
   </div>
 </li>
     </ul>
     </div>
-    <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul class="collapse">
-  <li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary"><span class="header-section-number">7.1</span> Summary</a></li>
-  <li><a href="#application-from-spectral-confusion-to-refined-mapping" id="toc-application-from-spectral-confusion-to-refined-mapping" class="nav-link" data-scroll-target="#application-from-spectral-confusion-to-refined-mapping"><span class="header-section-number">7.2</span> Application: From Spectral Confusion to Refined Mapping</a></li>
-  <li><a href="#reflection" id="toc-reflection" class="nav-link" data-scroll-target="#reflection"><span class="header-section-number">7.3</span> Reflection</a></li>
-  </ul>
-</nav>
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#application-from-spectral-confusion-to-refined-mapping" id="toc-application-from-spectral-confusion-to-refined-mapping" class="nav-link" data-scroll-target="#application-from-spectral-confusion-to-refined-mapping">Application: From Spectral Confusion to Refined Mapping</a></li>
+  <li><a href="#reflection" id="toc-reflection" class="nav-link" data-scroll-target="#reflection">Reflection</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Week 6: Machine Learning and Land Cover Classification</span></h1>
+<h1 class="title"><span class="chapter-title">Week 6: Machine Learning and Land Cover Classification</span></h1>
 </div>
 
 
@@ -193,13 +186,13 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="summary" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="summary"><span class="header-section-number">7.1</span> Summary</h2>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
 <p>This week marked a conceptual shift from calculating continuous pixel values (like NDVI or LST) to categorising pixels into discrete <strong>Land Use/Land Cover (LULC)</strong> classes using Machine Learning (ML). The core focus was on <strong>Supervised Classification</strong>, where an algorithm is trained on labelled data to identify features based on their spectral signatures.</p>
 <p>We explored various classifiers, with a strong emphasis on the <strong>Random Forest (RF)</strong> algorithm. Unlike a single <strong>Decision Tree (CART)</strong>, which is prone to overfitting and highly sensitive to training data anomalies, a Random Forest creates an “ensemble” of many independent trees through <strong>Bagging (Bootstrap Aggregating)</strong>. By taking the “majority vote” from these trees, RF significantly improves classification stability and accuracy. As highlighted in the lecture, there is an inherent <strong>interpretability-accuracy tradeoff</strong>: while RF provides higher accuracy, it operates more as a “black box” compared to the transparent logic of a single decision tree.</p>
 </section>
-<section id="application-from-spectral-confusion-to-refined-mapping" class="level2" data-number="7.2">
-<h2 data-number="7.2" class="anchored" data-anchor-id="application-from-spectral-confusion-to-refined-mapping"><span class="header-section-number">7.2</span> Application: From Spectral Confusion to Refined Mapping</h2>
+<section id="application-from-spectral-confusion-to-refined-mapping" class="level2">
+<h2 class="anchored" data-anchor-id="application-from-spectral-confusion-to-refined-mapping">Application: From Spectral Confusion to Refined Mapping</h2>
 <p>To implement the RF algorithm, I utilised Google Earth Engine (GEE) to classify Greater London into three primary classes: <strong>Water</strong> (blue), <strong>Urban</strong> (red), and <strong>Vegetation</strong> (green). My methodology involved an iterative refinement process to overcome initial technical hurdles.</p>
 <div class="quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
@@ -230,16 +223,16 @@ Figure&nbsp;7.2: Refined: Corrected with NDWI and Balanced Samples
 </div>
 </div>
 <p>Figure 1: Comparison of Machine Learning iterations. The refined model (right) effectively resolved the initial misclassification of urban shadows as water bodies.</p>
-<p><strong>Figure 1:</strong> Comparison of Machine Learning iterations in GEE.</p>
-<p>As observed in initial, the initial pixel-based model suffered from significant <strong>Spectral Confusion</strong>. Because the model only examined individual 10m cells in isolation, it failed to distinguish between the low-reflectance values of <strong>building shadows</strong> in Central London and the <strong>River Thames</strong>, resulting in a “noisy” and geographically inaccurate “flooded” output.</p>
 <p>To resolve this, I re-engineered the model by:</p>
 <ol type="1">
 <li><p><strong>Incorporating the NDWI band:</strong> Adding the Normalized Difference Water Index forced a spectral separation between aquatic features and terrestrial shadows.</p></li>
 <li><p><strong>Targeted Sampling:</strong> I provided the Random Forest with specific “shadow-urban” training points, teaching the model to recognise that dark pixels within high-density built environments are statistically more likely to be shadows than water bodies.</p></li>
 </ol>
+<p><strong>Figure 1:</strong> Comparison of Machine Learning iterations in GEE.</p>
+<p>As observed in initial, the initial pixel-based model suffered from significant <strong>Spectral Confusion</strong>. Because the model only examined individual 10m cells in isolation, it failed to distinguish between the low-reflectance values of <strong>building shadows</strong> in Central London and the <strong>River Thames</strong>, resulting in a “noisy” and geographically inaccurate “flooded” output.</p>
 </section>
-<section id="reflection" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="reflection"><span class="header-section-number">7.3</span> Reflection</h2>
+<section id="reflection" class="level2">
+<h2 class="anchored" data-anchor-id="reflection">Reflection</h2>
 <p>The most striking lesson this week was the absolute truth of the <strong>“Garbage In, Garbage Out” (GIGO)</strong> principle. Despite its mathematical sophistication, the Random Forest algorithm is entirely at the mercy of the training data’s purity and representative power.</p>
 <p>Pixel-based classification inherently lacks <strong>Spatial Context</strong>. It processes each pixel as a silo, which is why it struggles with the “salt-and-pepper” noise seen in my first attempt. This week taught me that as a spatial analyst, my role is not just to “run the code,” but to critically interrogate the spectral overlap between classes and validate outputs against geographical reality. This experience provides a perfect logical bridge to <strong>Week 7</strong>, where I will move beyond isolated pixels to explore <strong>Object-Based Image Analysis (OBIA)</strong> to further refine these spatial boundaries.</p>
 
@@ -649,12 +642,12 @@ Figure&nbsp;7.2: Refined: Corrected with NDWI and Balanced Samples
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./week5.html" class="pagination-link" aria-label="week5">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">week5</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">week5</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./week7.html" class="pagination-link" aria-label="Week 7: Advanced Classification">
-        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Week 7: Advanced Classification</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-title">Week 7: Advanced Classification</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -663,4 +656,5 @@ Figure&nbsp;7.2: Refined: Corrected with NDWI and Balanced Samples
 
 
 
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>
