@@ -3,24 +3,70 @@ title: "Week 1: Introduction to Earth Observation"
 editor: visual
 ---
 
-## Week 1 Learning Diary
+## Summary
 
-**Summary**
-We kicked off the module by looking at the fundamentals of remote sensing . We learned the core difference between passive sensors (like optical cameras capturing reflected sunlight) and active sensors (like SAR, which fires its own energy and can pierce right through clouds) . A massive chunk of the lecture covered the four key resolutions we have to juggle when picking data: spatial, spectral, temporal, and radiometric . In the practical, things got real quickly! We loaded Landsat and Sentinel-2 data into SNAP and R (using the `terra` package) to extract spectral signatures for different land covers . We even generated a Tasseled Cap transformation to look at urban 'brightness' and 'greenness'. My main independent thought here is just how much of a balancing act remote sensing is—you almost never get perfect spatial detail *and* high temporal revisit times in one free dataset, so choosing the right sensor for a specific urban problem is half the battle .
+This week introduced the physical principles that underpin all remotely sensed data. Remote sensing is fundamentally the measurement of electromagnetic radiation (EMR) that has interacted with the Earth's surface — either passively (detecting reflected solar energy or emitted thermal energy) or actively (transmitting a signal and measuring its return, as in Synthetic Aperture Radar). The distinction matters operationally: passive optical sensors like Sentinel-2's Multi-Spectral Instrument (MSI) are constrained by solar illumination and cloud cover, while active sensors like Sentinel-1's C-band SAR can acquire data at night and through cloud — a critical advantage in persistently cloudy regions like the UK [@tempfli2009].
 
-**Applications**
+EMR does not travel unaltered from the sun to the sensor. As it passes through the atmosphere, it undergoes **scattering** (redirection by particles), **absorption** (conversion to heat by atmospheric gases), and **transmission**. The type of scattering depends on the ratio of particle size to wavelength: **Rayleigh scattering** (particles much smaller than the wavelength) preferentially affects shorter wavelengths, which is why the sky appears blue — blue light (\~450 nm) scatters roughly 5.5 times more than red light (\~700 nm) [@jensen2015]. At the surface, incident radiation is partitioned into reflected, absorbed, and transmitted components, with the proportions varying by material and wavelength — this wavelength-dependent reflectance is what produces the **spectral signature** that allows different surface types to be distinguished.
 
-When looking at how these concepts are used in the real world, the trade-off between spatial and spectral resolution becomes super obvious. I looked at a 2018 study by Kibria et al. that used Object-Based Image Analysis (OBIA) to extract green infrastructure in the highly dense city of Dhaka. They compared Sentinel-2 and Landsat-8 and found that Sentinel-2’s 10m spatial resolution completely outperformed Landsat’s 30m resolution for spotting tiny, fragmented street trees and small parks. With Landsat, they ran into a massive 'mixed pixel' problem where concrete and canopy blur together in a single grid, underestimating the green cover. If the policy goal is mapping exactly *where* the greenery is, Sentinel-2 wins hands down.
-
-However, spectral resolution matters just as much depending on the urban challenge. Another paper by Wang et al. (2024) used Landsat to measure how much these green covers actually cool down the Urban Heat Island (UHI) effect in Nanjing. While Sentinel-2 is great for high-res mapping, it completely lacks thermal infrared bands. Landsat, with its thermal sensors, can actually retrieve Land Surface Temperature (LST) to quantify the cooling effect. Comparing these two studies shows me that there's no silver bullet in Earth Observation. A city trying to adapt to extreme heat needs the high-resolution spatial mapping of Sentinel-2 *combined* with the thermal spectral data of Landsat to make smart, localized climate policies.
-
-**Reflection**
-Reflecting on this week, what really blew my mind was connecting abstract physics to tangible urban data. Learning about how Rayleigh scattering makes the sky blue (or sunsets red) was a cool 'aha!' moment that made the science feel very real . Honestly, getting my hands dirty with SNAP and R during the practical was both daunting and exciting. Dealing with different spatial resolutions, resampling bands, and seeing how messy raw Earth Observation data can be was an eye-opener. Yet, seeing how R packages like `terra` can efficiently pull spectral values across thousands of pixels makes me realize how powerful this skill set is. In the future, I can totally see myself using these exact workflows to overlay Tasseled Cap indices with socioeconomic data, perhaps exploring whether lower-income neighborhoods disproportionately lack access to cooling green spaces. It's not just about learning software; it's about unlocking a new scale of evidence for fairer urban planning.
+Remotely sensed data is characterised by four resolutions, each involving trade-offs. **Spatial resolution** (pixel size) determines the smallest feature detectable — Sentinel-2 provides 10 m in VNIR bands but only 20 m in SWIR and 60 m in atmospheric bands. **Spectral resolution** describes the number and width of wavelength bands recorded: Sentinel-2's 13 bands span from coastal aerosol (443 nm) to SWIR (2190 nm), including three red-edge bands (B5, B6, B7) specifically designed to capture the steep reflectance increase at the vegetation red-edge (\~700–750 nm). **Temporal resolution** is the revisit period — 5 days for the Sentinel-2A/2B constellation. **Radiometric resolution** determines the sensor's sensitivity to differences in reflected energy: Sentinel-2's 12-bit quantisation provides 4096 discrete brightness levels per band, compared to Landsat 5 TM's 8-bit (256 levels), enabling finer discrimination of subtle spectral differences [@phiri2020].
 
 ------------------------------------------------------------------------
 
-**References:**
+## Application
 
--   Kibria, M. G., et al. (2018). *The potentials of Sentinel-2 and LandSat-8 data in green infrastructure extraction, using object based image analysis (OBIA) method*.
+In the practical, I worked with a Sentinel-2 L2A (Bottom of Atmosphere) scene of London acquired on 2 May 2025 using the SNAP toolbox and R. L2A products have already undergone atmospheric correction via the Sen2Cor processor, converting top-of-atmosphere radiance to surface reflectance — removing the atmospheric scattering and absorption effects discussed above. The first step was generating a **true colour composite** by mapping B4 (Red), B3 (Green), and B2 (Blue) to the RGB colour channels:
 
--   Wang, Y., et al. (2024). *Measuring the cooling effects of green cover on urban heat island effects using Landsat satellite imagery*.
+![True colour composite of London generated in SNAP using Sentinel-2 L2A B4/B3/B2. The Thames, Hyde Park, and the dense urban fabric of central London are clearly resolved at 10 m spatial resolution. The image demonstrates the high radiometric quality of L2A surface reflectance data — contrast between vegetated parks and built surfaces is immediately apparent without any manual histogram stretching.](images/2.png){#fig-truecolour}
+
+I then computed a **Tasseled Cap Transformation (TCT)**, originally developed by @kauth1976 for Landsat MSS data to compress multispectral information into physically interpretable components. The transformation applies sensor-specific coefficients to produce three orthogonal axes: **Brightness** (aligned with high-albedo surfaces — bare soil, concrete, rooftops), **Greenness** (aligned with photosynthetically active vegetation), and **Wetness** (aligned with moisture content in soil, vegetation, and water bodies). Before computing TCT, all bands had to be resampled to a uniform 20 m resolution using SNAP's Resampling tool, because the required input bands span two native resolutions (B2, B3, B4, B8 at 10 m; B11, B12 at 20 m). The Brightness component, for example, was calculated as:
+
+```{r eval=FALSE}
+# Tasseled Cap Brightness formula applied via SNAP Band Maths
+# Coefficients are sensor-specific — these are for Sentinel-2 MSI
+Brightness = (0.3037 * B2) + (0.2793 * B3) + (0.4743 * B4) +
+             (0.5585 * B8) + (0.5082 * B11) + (0.1863 * B12)
+```
+
+The three components were displayed as an RGB composite (R: Brightness, G: Greenness, B: Wetness):
+
+![Tasseled Cap Transformation RGB composite. The Thames appears bright blue (high Wetness, low Brightness and Greenness), urban areas are purple/magenta (high Brightness dominating over Greenness), and parks display as yellow-green patches (high Greenness). This visualisation compresses six spectral bands into three physically meaningful dimensions — a form of guided dimensionality reduction that, unlike PCA, produces components with consistent, interpretable physical meanings across scenes.](images/1.png){#fig-tct}
+
+To quantitatively compare spectral characteristics across land cover types, I created vector polygons in SNAP for four categories — **urban**, **grass**, **forest**, and **bare earth** — exported them as shapefiles alongside the resampled imagery (GeoTIFF), and performed the analysis in R using the `terra` package. The extraction function below abstracts the workflow of pulling pixel values from a raster stack for a given polygon and reshaping them into tidy format:
+
+```{r eval=FALSE}
+# Function to extract pixel values per land cover polygon and reshape for ggplot
+band_fun <- function(sensor, landcover) {
+  col_sensor <- deparse(substitute(sensor))
+  col_land <- deparse(substitute(landcover))
+  terra::extract(sensor, landcover, progress = F) %>%
+    as_tibble() %>%
+    pivot_longer(cols = 2:ncol(.),
+                 names_to = "bands",
+                 values_to = "band_values") %>%
+    add_column(sensor = col_sensor) %>%
+    add_column(land = col_land)
+}
+```
+
+::: {layout-ncol="2"}
+![Spectral reflectance profiles (mean ± 1 SD) for four land cover types. Vegetation classes (grass and forest) show the characteristic "red-edge" — low reflectance in visible bands (absorption by chlorophyll) followed by a sharp increase in NIR bands (strong scattering by mesophyll cell structure). Urban surfaces exhibit a relatively flat, low-amplitude profile across all bands, consistent with the spectrally mixed nature of built-up pixels at 20 m resolution.](images/spectral_line_plot.png){#fig-spectral}
+
+![Spectral density plot showing the distribution of all pixel reflectance values pooled across bands. Urban pixels cluster tightly at lower values with a narrow distribution, while vegetation and bare earth exhibit broader, higher-value distributions driven by their strong NIR response. The dashed vertical lines indicate overall mean reflectance per class.](images/spectral_density_plot.png){#fig-density}
+:::
+
+The spectral profiles in @fig-spectral reveal patterns consistent with the physical principles discussed in the lecture. The vegetation red-edge — the steep reflectance increase between B4 (Red, \~665 nm) and B8 (NIR, \~842 nm) — is driven by the contrast between strong chlorophyll absorption in the red and strong scattering by the spongy mesophyll layer in the NIR [@jensen2015]. Bare earth shows the highest reflectance in visible bands (B2–B4), which is expected for exposed mineral surfaces with no vegetative cover to absorb red light. Urban pixels, despite representing built surfaces, show surprisingly moderate reflectance with high variance — likely because the 20 m pixel size captures sub-pixel mixtures of rooftops, roads, vegetation, and shadow, creating a **mixed pixel** problem that is well-documented in the urban remote sensing literature [@phiri2020].
+
+These spectral extraction techniques have direct practical applications. @labib2018 evaluated Sentinel-2 and Landsat-8 for mapping urban green infrastructure using Object-Based Image Analysis (OBIA) in Dhaka, finding that Sentinel-2's finer 10 m resolution achieved higher accuracy (71.24%) than Landsat-8 at extracting fragmented green patches in dense urban fabrics — precisely the kind of resolution advantage visible when comparing my 10 m true colour composite (@fig-truecolour) to the 20 m resampled TCT output (@fig-tct). @ni2024 extended this further by using Landsat-derived spectral indices (NDVI) to quantify the cooling effects of urban green spaces on the Urban Heat Island (UHI) effect in Nagoya, demonstrating that UGS exerts a measurable cooling influence up to 300 m from its edge, with the strongest effect within 200 m. Their work shows how the TCT components we computed — particularly Greenness and Brightness — are not merely visualisation tools but inputs to quantitative environmental models that directly inform nature-based urban climate mitigation strategies aligned with **SDG 11** (Sustainable Cities and Communities).
+
+------------------------------------------------------------------------
+
+## Reflection
+
+The most significant conceptual shift this week was recognising that remotely sensed data is not simply "imagery" but a structured measurement of physical interactions between electromagnetic radiation and matter. Every pixel value in our Sentinel-2 scene encodes information about the surface's reflectance properties at a specific wavelength, after atmospheric correction has (imperfectly) removed the confounding effects of scattering and absorption. This framing transforms the data from something visual into something quantitative and analytically tractable — the spectral profiles in @fig-spectral are not aesthetic choices but measurements of physical properties.
+
+The practical highlighted the complementary strengths of different tools. SNAP excels at interactive exploration — visually comparing band combinations, adjusting contrast stretches, drawing ROI polygons — but becomes cumbersome for reproducible quantitative analysis. R's `terra` package, by contrast, enables scripted, repeatable extraction and statistical comparison of spectral values across land cover types, but lacks SNAP's visual immediacy for image interpretation. The most effective workflow combined both: SNAP for preprocessing (resampling, band maths, polygon creation, export) and R for analysis and visualisation.
+
+One limitation I noticed is the **subjectivity of training polygon placement**. My "forest" polygon likely included a mix of canopy and undergrowth, and my "urban" polygon certainly contained sub-pixel vegetation — which explains the high variance in the urban spectral profile. This foreshadows a fundamental challenge in supervised classification that the module will address later: the quality of any derived product is bounded by the quality of the reference data, not the sophistication of the algorithm. Going forward, I am curious to explore how Google Earth Engine might streamline these preprocessing workflows by operating on cloud-hosted data collections without the need for local downloads, and how the spectral analysis skills from this week will underpin the classification methods introduced in later weeks.
+
+------------------------------------------------------------------------

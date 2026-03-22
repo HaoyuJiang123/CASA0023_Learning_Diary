@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>week2 – CASA0023 Learning Diary</title>
+<title>Week 2: Portfolio Tools &amp; Sentinel-2 Sensor – CASA0023 Learning Diary</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -70,7 +90,37 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
+<script src="site_libs/fitvids-2.1.1/fitvids.min.js"></script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -83,7 +133,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week2.html"><span class="chapter-title">week2</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week2.html"><span class="chapter-title">Week 2: Portfolio Tools &amp; Sentinel-2 Sensor</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -120,7 +170,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week2.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">week2</span></a>
+  <a href="./week2.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Week 2: Portfolio Tools &amp; Sentinel-2 Sensor</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -135,17 +185,28 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week5.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">week5</span></a>
+  <a href="./week5.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 5: Google Earth Engine I</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week6.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 6: Machine Learning and Land Cover Classification</span></a>
+  <a href="./week6.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 6: Classification I — Supervised Land Cover Mapping</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./week7.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 7: Advanced Classification</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week8.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 8: Synthetic Aperture Radar (SAR)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
   </div>
 </li>
     </ul>
@@ -158,14 +219,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary">1. Summary</a></li>
-  <li><a href="#applications" id="toc-applications" class="nav-link" data-scroll-target="#applications">2. Applications</a>
-  <ul class="collapse">
-  <li><a href="#urban-radiation-budget-and-microclimate" id="toc-urban-radiation-budget-and-microclimate" class="nav-link" data-scroll-target="#urban-radiation-budget-and-microclimate">Urban Radiation Budget and Microclimate</a></li>
-  <li><a href="#disaster-response-ecological-assessment" id="toc-disaster-response-ecological-assessment" class="nav-link" data-scroll-target="#disaster-response-ecological-assessment">Disaster Response &amp; Ecological Assessment</a></li>
-  </ul></li>
-  <li><a href="#reflection" id="toc-reflection" class="nav-link" data-scroll-target="#reflection">3. Reflection</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#xaringan-presentation" id="toc-xaringan-presentation" class="nav-link" data-scroll-target="#xaringan-presentation">Xaringan Presentation</a></li>
+  <li><a href="#application" id="toc-application" class="nav-link" data-scroll-target="#application">Application</a></li>
+  <li><a href="#reflection" id="toc-reflection" class="nav-link" data-scroll-target="#reflection">Reflection</a></li>
   </ul>
 </nav>
     </div>
@@ -174,7 +231,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-title">week2</span></h1>
+<h1 class="title"><span class="chapter-title">Week 2: Portfolio Tools &amp; Sentinel-2 Sensor</span></h1>
 </div>
 
 
@@ -192,40 +249,63 @@ ul.task-list li input[type="checkbox"] {
 
 
 <section id="summary" class="level2">
-<h2 class="anchored" data-anchor-id="summary">1. Summary</h2>
-<p>This week’s learning fundamentally shifted my understanding of remote sensing sensors, with a particular focus on the European Space Agency’s (ESA) Sentinel-2 mission. Unlike the conventional public perception of satellite imagery as mere “aerial photographs,” I have come to understand that Sentinel-2’s MultiSpectral Instrument (MSI) is a highly precise scientific tool designed to measure electromagnetic energy across the Earth’s surface. A defining feature of this mission is its twin-satellite configuration (Sentinel-2A and 2B), which achieves a remarkable 5-day revisit cycle at the equator. This high temporal resolution is a game-changer, transitioning remote sensing from static mapping to dynamic, high-frequency time-series analysis.</p>
-<p>Technically, Sentinel-2 captures data across 13 distinct spectral bands spanning the visible, near-infrared (NIR), and shortwave infrared (SWIR) spectrums, with spatial resolutions varying between 10 m, 20 m, and 60 m depending on the specific band’s physical purpose.</p>
-<p><strong>Independent Thought &amp; Critical Evaluation:</strong> In evaluating optical remote sensors, there is often a pervasive bias toward maximizing spatial resolution. However, reviewing Sentinel-2’s architecture reveals that strategic spectral positioning is frequently more valuable than simply reducing pixel size. For instance, Sentinel-2 sacrifices some spatial detail (20 m) to include three specific red-edge bands (B5–B7). This is a brilliant physical trade-off, as these bands sit exactly where chlorophyll absorption drops off, significantly enhancing the detection of subtle biochemical variations in vegetation. Furthermore, ESA’s provision of Level-2A surface reflectance products represents a crucial step in “data democratization.” By removing the heavy computational burden of complex atmospheric corrections, it allows researchers to focus directly on spatial analysis. Nevertheless, as a critical user, I must remain aware of its limitations: as an optical sensor, it is severely hindered by cloud cover and shadows, and its reliance on automated Level-2A algorithms introduces a “black box” element that requires careful validation in highly polluted urban atmospheres.</p>
-</section>
-<section id="applications" class="level2">
-<h2 class="anchored" data-anchor-id="applications">2. Applications</h2>
-<p>The literature demonstrates that Sentinel-2’s unique spectral and temporal characteristics make it highly versatile across entirely different disciplines. I found two applications particularly compelling.</p>
-<section id="urban-radiation-budget-and-microclimate" class="level3">
-<h3 class="anchored" data-anchor-id="urban-radiation-budget-and-microclimate">Urban Radiation Budget and Microclimate</h3>
-<p>The first key application lies in the assessment of urban microclimates. The primary purpose of this research is to evaluate how the expansion of impervious surfaces alters local radiation budgets and exacerbates the Urban Heat Island (UHI) intensity. Researchers achieve this by combining Sentinel-2’s SWIR and NIR bands to compute the Normalized Difference Built-up Index (NDBI):</p>
-<p>$$NDBI = \frac{SWIR - NIR}{SWIR + NIR}$$</p>
-<p>Because Sentinel-2 provides 20 m SWIR bands, it offers unparalleled sensitivity to the thermal properties of different building materials. The outcome of such studies is the precise differentiation between highly reflective surfaces (like cool roofs) and heat-absorbing materials (like asphalt). This provides urban planners with actionable, physically grounded insights for heat mitigation and climate-resilient zoning.</p>
-</section>
-<section id="disaster-response-ecological-assessment" class="level3">
-<h3 class="anchored" data-anchor-id="disaster-response-ecological-assessment">Disaster Response &amp; Ecological Assessment</h3>
-<p>A completely different, yet equally powerful, application is in rapid post-disaster evaluation, specifically concerning forest fire severity. The purpose here is to quickly quantify ecological damage to guide emergency resource allocation. Fernández-Manso et al.&nbsp;(2016) demonstrated that by utilizing Sentinel-2’s novel red-edge spectral indices (such as CIre and PSRI), researchers can classify burn severity with far greater accuracy than traditional SWIR-based Landsat methods. The significance of this application is twofold: physically, the red-edge bands are hyper-sensitive to the sudden degradation of chlorophyll; temporally, the 5-day revisit cycle ensures that damage is assessed immediately before secondary vegetation recovery (green-up) can mask the spectral signature of the disaster.</p>
-</section>
-</section>
-<section id="reflection" class="level2">
-<h2 class="anchored" data-anchor-id="reflection">3. Reflection</h2>
-<p>Reflecting on this week’s content, my biggest takeaway is a profound shift in my scientific perspective. I now fully appreciate that remote sensing is fundamentally an exercise in physics and array mathematics, rather than just geographical illustration. The realization that strategic spectral resolution can unlock more scientific insight than extreme spatial resolution has completely reframed how I will select datasets for future projects.</p>
-<p>Furthermore, building my presentation using Xaringan and R Markdown introduced me to the Open Science paradigm. Integrating text, LaTeX formulas, references, and executable code into a single document ensures a level of transparency and reproducibility that traditional PowerPoint slides simply cannot match. Eliminating the “black-box” nature of research communication is a standard I intend to maintain throughout my academic career.</p>
-<p>Looking toward broader societal contexts, the open-access nature of Sentinel-2 data is a powerful catalyst for researching spatial equity. In my future work, I plan to leverage platforms like Google Earth Engine (GEE) alongside Sentinel-2 time series to monitor green space degradation and surface temperature anomalies. By focusing on low-income or marginalized communities, I aim to provide objective, high-resolution physical data to inform environmental justice initiatives. This synthesis of rigorous physical science and pressing social relevance is exactly the direction I wish to pursue in urban spatial data science.</p>
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>This week shifted focus from remote sensing theory to the practical tools underpinning the module’s assessment: <strong>Xaringan</strong> for R Markdown-based slide presentations, and <strong>Quarto</strong> for individual online learning diaries. Both operate within the RStudio ecosystem and share core Markdown syntax, though they differ substantially in configuration, citation management, and output flexibility.</p>
+<p>Xaringan (pronounced “shar-in-gen”) is an R package by Yihui Xie that compiles <code>.Rmd</code> files into HTML slides via remark.js. The YAML preamble controls themes, highlight styles, and slide ratios; slides are separated by <code>---</code> and incremental reveals by <code>--</code>. Layout relies on CSS classes — <code>.pull-left[]</code> / <code>.pull-right[]</code> for two-column arrangements, <code>class: inverse, center, middle</code> for emphasis slides. The <strong>xaringanExtra</strong> package <span class="citation" data-cites="adenbuie2020">(<a href="references.html#ref-adenbuie2020" role="doc-biblioref">Aden-Buie 2020</a>)</span> adds features like search, tile view, and clipboard support. Referencing in Xaringan requires exporting a <code>.bib</code> from Zotero via Better BibTeX, then using <code>RefManageR</code> and <code>knitcitations</code> — a somewhat cumbersome pipeline. Quarto, released by Posit in 2022, simplifies this considerably: it merges Bookdown’s split configuration files into a single <code>_quarto.yml</code>, supports <strong>native Zotero integration</strong> in Visual mode (inserting <code>[@key]</code> citations directly), and uses a clean cross-referencing prefix system (<code>@fig-</code>, <code>@tbl-</code>, <code>@sec-</code>). Quarto is also language-agnostic, supporting Python, Julia, and Observable alongside R — a significant advantage for multi-language workflows. A key practical lesson from the lecture: <strong>keep analysis code and the learning diary in separate R projects</strong> to avoid rendering conflicts.</p>
+<p>For the week’s sensor task, I selected <strong>Sentinel-2</strong> — a twin-satellite constellation (2A and 2B) operated by ESA under the Copernicus programme <span class="citation" data-cites="drusch2012">(<a href="references.html#ref-drusch2012" role="doc-biblioref">Drusch et al. 2012</a>)</span>. Its MultiSpectral Instrument (MSI) captures <strong>13 spectral bands</strong> from visible (443 nm) to shortwave infrared (2190 nm), at spatial resolutions of 10 m (B2–B4, B8), 20 m (B5–B7, B8a, B11–B12), and 60 m (B1, B9, B10). The twin configuration achieves a <strong>5-day revisit</strong> at the equator with a 290 km swath. What I found most scientifically significant during my research is that <strong>spectral band positioning matters more than pixel size alone</strong>: the three <strong>red-edge bands (B5–B7, 705–783 nm)</strong> sit precisely where chlorophyll absorption transitions to the near-infrared reflectance plateau, encoding critical information about vegetation health that broader bands miss entirely. ESA’s operationally processed <strong>Level-2A surface reflectance</strong> products further reduce the preprocessing burden for end users, while the fully open data policy — accessible through the Copernicus Data Space Ecosystem and Google Earth Engine — has democratised access to high-quality multispectral imagery globally <span class="citation" data-cites="wulder2012">(<a href="references.html#ref-wulder2012" role="doc-biblioref">Wulder et al. 2012</a>)</span>. However, Sentinel-2 remains an <strong>optical sensor</strong> fundamentally limited by cloud cover and atmospheric conditions, and its revisit frequency varies with latitude — constraints that often necessitate integration with SAR platforms like Sentinel-1 for operational monitoring.</p>
 <hr>
 </section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li><p>Fernández-Manso, A., Fernández-Manso, O., &amp; Quintano, C. (2016). Sentinel-2A red-edge spectral indices suitability for estimating burn severity. <em>International Journal of Applied Earth Observation and Geoinformation</em>, 50, 170–185.</p></li>
-<li><p>Wulder, M. A., Masek, J. G., Cohen, W. B., Loveland, T. R., &amp; Woodcock, C. E. (2012). Opening the archive: How free data has enabled the science and monitoring promise of Landsat. <em>Remote Sensing of Environment</em>, 122, 2–10.</p></li>
-</ul>
+<section id="xaringan-presentation" class="level2">
+<h2 class="anchored" data-anchor-id="xaringan-presentation">Xaringan Presentation</h2>
+<p>Below is my 9-slide Xaringan presentation covering Sentinel-2’s technical specifications, three application domains from the literature, and personal reflections.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="shareagain" style="min-width:300px;margin:1em auto;" data-exeternal="1">
+<iframe src="https://haoyujiang123.github.io/week2_presentation/week2_sensor_presentation.html" width="1600" height="900" style="border:2px solid currentColor;" loading="lazy" allowfullscreen=""></iframe>
+<script>fitvids('.shareagain', {players: 'iframe'});</script>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="application" class="level2">
+<h2 class="anchored" data-anchor-id="application">Application</h2>
+<p>My presentation explored three application domains that collectively illustrate how Sentinel-2’s spectral design enables analyses ranging from urban thermal environments to aquatic ecosystems and post-disaster assessment.</p>
+<p><strong>Urban heat island analysis via the Normalised Difference Built-up Index (NDBI)</strong> demonstrates a direct link between Sentinel-2’s SWIR bands and urban climate research. By computing <span class="math inline">\(NDBI = \frac{SWIR - NIR}{SWIR + NIR}\)</span>, researchers can distinguish impervious surfaces — including reflective cool roofs versus heat-absorbing dark materials — at 20 m resolution. <span class="citation" data-cites="chen2006">Chen et al. (<a href="references.html#ref-chen2006" role="doc-biblioref">2006</a>)</span> showed that NDBI derived from multispectral imagery correlates strongly with land surface temperature (LST), enabling city-scale mapping of urban heat island intensity without requiring dedicated thermal sensors. The practical implication is significant: municipal governments can use freely available Sentinel-2 imagery to identify heat-vulnerable neighbourhoods and prioritise cooling interventions, such as increasing tree canopy or retrofitting rooftops. However, NDBI is a proxy rather than a direct temperature measurement — it identifies built-up surfaces likely to contribute to heat retention, but actual thermal mapping still requires sensors with dedicated thermal infrared bands (e.g., Landsat 8/9 TIRS or ECOSTRESS).</p>
+<p><strong>Coastal water quality monitoring</strong> pushes Sentinel-2 beyond its primary land-observation design. The <strong>Coastal Aerosol band (B1, 443 nm)</strong> combined with red-edge bands enables estimation of chlorophyll-a concentration and detection of harmful algal blooms (HABs) in nearshore and inland waters. <span class="citation" data-cites="toming2016">Toming et al. (<a href="references.html#ref-toming2016" role="doc-biblioref">2016</a>)</span> demonstrated strong correlations between Sentinel-2 band ratios (particularly B4/B3 and B5/B4) and in-situ chlorophyll-a measurements in Estonian lakes — a finding with direct relevance to eutrophication monitoring in urban-rural fringe water bodies where nutrient loading from agricultural runoff drives algal proliferation. A critical caveat, however, is that <strong>atmospheric correction over water</strong> is substantially harder than over land: water-leaving radiance constitutes only a small fraction of the at-sensor signal, and standard land-oriented correction algorithms (e.g., Sen2Cor) may introduce significant errors over dark water targets <span class="citation" data-cites="pahlevan2017">(<a href="references.html#ref-pahlevan2017" role="doc-biblioref">Pahlevan et al. 2017</a>)</span>. This suggests that water quality applications benefit from purpose-built atmospheric correction chains and, for open ocean contexts, complementary data from dedicated ocean colour sensors like Sentinel-3 OLCI.</p>
+<p><strong>Wildfire burn severity mapping</strong> represents perhaps the most compelling demonstration of the red-edge bands’ analytical power. <span class="citation" data-cites="fernandezmanso2016">Fernández-Manso, Fernández-Manso, and Quintano (<a href="references.html#ref-fernandezmanso2016" role="doc-biblioref">2016</a>)</span> compared Sentinel-2 red-edge spectral indices (CIre, PSRI, NDVIre1) against traditional SWIR/NIR indices for mapping post-fire burn severity, finding that the red-edge indices <strong>clearly separated four burn severity classes</strong> — from negligible damage to complete destruction — with higher discriminatory power than conventional approaches. This is because the red-edge region is acutely sensitive to chlorophyll degradation and changes in leaf internal structure caused by fire, providing information that broader NIR or SWIR bands average out. The practical significance is immediate: accurate burn severity maps guide post-fire forest recovery planning, emergency resource allocation, and insurance loss assessment. Combined with Sentinel-2’s 5-day revisit and free access, this enables near-real-time ecological damage assessment at scales that would be prohibitively expensive with commercial VHR imagery.</p>
+<hr>
+</section>
+<section id="reflection" class="level2">
+<h2 class="anchored" data-anchor-id="reflection">Reflection</h2>
+<p>Working through the Sentinel-2 literature for this presentation shifted my understanding of remote sensing from “satellite imagery” to <strong>physical measurement of electromagnetic energy</strong>. This distinction matters: it is the precise positioning of spectral bands — not just spatial resolution — that determines what scientific questions a sensor can answer. The red-edge bands at 705–783 nm are a perfect example: they occupy a narrow spectral region where chlorophyll absorption transitions sharply to the NIR plateau, and this transition encodes information about vegetation stress, canopy structure, and burn damage that would be invisible to a sensor with only broad red and NIR bands. I had previously thought of “multispectral” as a generic category; I now appreciate that <strong>which wavelengths are sampled, and at what bandwidth</strong> fundamentally shapes analytical capability.</p>
+<p>From a broader perspective, two things struck me this week. First, Sentinel-2’s open data policy is not merely convenient — it is <strong>structurally transformative</strong> for spatial equity research. The applications I explored (urban heat mapping, water quality, disaster response) all share a common thread: they are most urgently needed in contexts where data budgets are smallest — low-income urban neighbourhoods, developing-country coastlines, fire-affected rural communities. Free 10 m multispectral imagery at 5-day revisit makes these analyses feasible at essentially zero data acquisition cost, removing a barrier that previously restricted high-resolution environmental monitoring to well-funded institutions. Second, the portfolio tools themselves (Xaringan, Quarto, Git/GitHub) represent a meaningful shift towards <strong>reproducible, version-controlled academic communication</strong>. Compressing my sensor research into 9 slides forced me to synthesise rather than summarise — a skill arguably more transferable than the Markdown syntax itself. Looking ahead, I can see direct applications of Sentinel-2 in urban analytics work I am interested in: combining NDBI-derived impervious surface maps with deprivation indices for <strong>environmental justice analysis</strong>, or using NDVI time-series in Google Earth Engine to monitor <strong>green infrastructure degradation</strong> at neighbourhood scale — questions where the combination of spatial detail, temporal frequency, and open access makes Sentinel-2 the natural starting point.</p>
+<hr>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-adenbuie2020" class="csl-entry" role="listitem">
+Aden-Buie, Garrick. 2020. <span>“<span class="nocase">xaringanExtra</span>: Extras and Extensions for Xaringan Slides.”</span> <a href="https://github.com/gadenbuie/xaringanExtra">https://github.com/gadenbuie/xaringanExtra</a>.
+</div>
+<div id="ref-chen2006" class="csl-entry" role="listitem">
+Chen, Xiao-Ling, Hong-Mei Zhao, Ping-Xiang Li, and Zhi-Yong Yin. 2006. <span>“Remote Sensing Image-Based Analysis of the Relationship Between Urban Heat Island and Land Use/Cover Changes.”</span> <em>Remote Sensing of Environment</em> 104 (2): 133–46.
+</div>
+<div id="ref-drusch2012" class="csl-entry" role="listitem">
+Drusch, M., U. Del Bello, S. Carlier, O. Colin, V. Fernandez, F. Gascon, B. Hoersch, et al. 2012. <span>“Sentinel-2: <span>ESA</span>’s Optical High-Resolution Mission for <span>GMES</span> Operational Services.”</span> <em>Remote Sensing of Environment</em> 120: 25–36.
+</div>
+<div id="ref-fernandezmanso2016" class="csl-entry" role="listitem">
+Fernández-Manso, Alfonso, Ovia Fernández-Manso, and Carmen Quintano. 2016. <span>“Sentinel-2A Red-Edge Spectral Indices Suitability for Discriminating Burn Severity.”</span> <em>International Journal of Applied Earth Observation and Geoinformation</em> 50: 170–75.
+</div>
+<div id="ref-pahlevan2017" class="csl-entry" role="listitem">
+Pahlevan, Nima, Sudipta Sarkar, Bryan A. Franz, Sundarabalan V. Balasubramanian, and Jianwei He. 2017. <span>“Sentinel-2 <span>MultiSpectral Instrument</span> (<span>MSI</span>) Data Processing for Aquatic Science Applications: Demonstrations and Validations.”</span> <em>Remote Sensing of Environment</em> 201: 47–56.
+</div>
+<div id="ref-toming2016" class="csl-entry" role="listitem">
+Toming, Kaire, Tiit Kutser, Alo Laas, Matti Sepp, Birgot Paavel, and Tiina Nõges. 2016. <span>“First Experiences in Mapping Lake Water Quality Parameters with <span>Sentinel-2 MSI</span> Imagery.”</span> <em>Remote Sensing</em> 8 (8): 640.
+</div>
+<div id="ref-wulder2012" class="csl-entry" role="listitem">
+Wulder, Michael A., Jeffrey G. Masek, Warren B. Cohen, Thomas R. Loveland, and Curtis E. Woodcock. 2012. <span>“Opening the Archive: How Free Data Has Enabled the Science and Monitoring Promise of <span>Landsat</span>.”</span> <em>Remote Sensing of Environment</em> 122: 2–10.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->

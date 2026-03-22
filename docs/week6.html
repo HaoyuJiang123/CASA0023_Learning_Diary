@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Week 6: Machine Learning and Land Cover Classification – CASA0023 Learning Diary</title>
+<title>Week 6: Classification I — Supervised Land Cover Mapping – CASA0023 Learning Diary</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -83,7 +103,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week6.html"><span class="chapter-title">Week 6: Machine Learning and Land Cover Classification</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week6.html"><span class="chapter-title">Week 6: Classification I — Supervised Land Cover Mapping</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -135,17 +155,28 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week5.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">week5</span></a>
+  <a href="./week5.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 5: Google Earth Engine I</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week6.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Week 6: Machine Learning and Land Cover Classification</span></a>
+  <a href="./week6.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Week 6: Classification I — Supervised Land Cover Mapping</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./week7.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 7: Advanced Classification</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week8.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 8: Synthetic Aperture Radar (SAR)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
   </div>
 </li>
     </ul>
@@ -159,7 +190,7 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary">Summary</a></li>
-  <li><a href="#application-from-spectral-confusion-to-refined-mapping" id="toc-application-from-spectral-confusion-to-refined-mapping" class="nav-link" data-scroll-target="#application-from-spectral-confusion-to-refined-mapping">Application: From Spectral Confusion to Refined Mapping</a></li>
+  <li><a href="#application" id="toc-application" class="nav-link" data-scroll-target="#application">Application</a></li>
   <li><a href="#reflection" id="toc-reflection" class="nav-link" data-scroll-target="#reflection">Reflection</a></li>
   </ul>
 </nav>
@@ -169,7 +200,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-title">Week 6: Machine Learning and Land Cover Classification</span></h1>
+<h1 class="title"><span class="chapter-title">Week 6: Classification I — Supervised Land Cover Mapping</span></h1>
 </div>
 
 
@@ -188,55 +219,73 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
-<p>This week marked a conceptual shift from calculating continuous pixel values (like NDVI or LST) to categorising pixels into discrete <strong>Land Use/Land Cover (LULC)</strong> classes using Machine Learning (ML). The core focus was on <strong>Supervised Classification</strong>, where an algorithm is trained on labelled data to identify features based on their spectral signatures.</p>
-<p>We explored various classifiers, with a strong emphasis on the <strong>Random Forest (RF)</strong> algorithm. Unlike a single <strong>Decision Tree (CART)</strong>, which is prone to overfitting and highly sensitive to training data anomalies, a Random Forest creates an “ensemble” of many independent trees through <strong>Bagging (Bootstrap Aggregating)</strong>. By taking the “majority vote” from these trees, RF significantly improves classification stability and accuracy. As highlighted in the lecture, there is an inherent <strong>interpretability-accuracy tradeoff</strong>: while RF provides higher accuracy, it operates more as a “black box” compared to the transparent logic of a single decision tree.</p>
+<p>This week shifted from computing continuous spectral indices (NDVI, LST) to the fundamentally different task of assigning each pixel to a <strong>discrete Land Use/Land Cover (LULC) class</strong> using supervised machine learning. The conceptual framework centres on the idea of <strong>feature space</strong>: each pixel is represented as a point in an n-dimensional space defined by its band values (and any derived features such as texture or indices), and the classifier’s job is to partition that space into regions corresponding to different land cover types.</p>
+<p>The lecture introduced a progression of classifiers with increasing complexity. A <strong>Classification and Regression Tree (CART)</strong> partitions feature space through a sequence of binary splits, choosing at each node the variable and threshold that maximally separates the classes — typically measured by Gini impurity or information gain. CART is transparent and interpretable (each decision can be traced through the tree), but suffers from <strong>overfitting</strong>: a fully grown tree memorises the training data, including its noise, and generalises poorly to unseen data <span class="citation" data-cites="jensen2015">(<a href="references.html#ref-jensen2015" role="doc-biblioref">Jensen 2015</a>)</span>. <strong>Random Forest (RF)</strong> addresses this through <strong>bagging (bootstrap aggregating)</strong> — growing hundreds of independent trees on randomly sampled subsets of both observations and features, then aggregating their predictions through majority vote. This ensemble approach dramatically reduces variance at the cost of interpretability: the forest produces better predictions, but the decision pathway for any individual pixel becomes opaque.</p>
+<p>A critical concept introduced this week is the <strong>train-test split</strong>. Training accuracy (resubstitution accuracy) — where the model is evaluated on the same data it was trained on — is almost always inflated and misleading. The practical demonstrated that a model reporting 99% resubstitution accuracy could perform substantially worse on held-out validation data, particularly when the split is done at the <strong>polygon level</strong> rather than the pixel level. The reason is subtle but important: if training and testing polygons are spatially adjacent or drawn from the same land cover patch, they share spatial autocorrelation — neighbouring pixels are statistically similar — meaning the test data is not truly independent. Splitting at the pixel level within randomly generated points partially mitigates this, though true spatial cross-validation (which the practical did not cover) would be more rigorous.</p>
+<p>The <strong>accuracy assessment</strong> framework uses a confusion matrix (or error matrix) to compute overall accuracy, producer’s accuracy (the probability that a reference pixel is correctly classified — related to omission error), and consumer’s accuracy (the probability that a classified pixel matches the reference — related to commission error) <span class="citation" data-cites="barsi2018">(<a href="references.html#ref-barsi2018" role="doc-biblioref">Barsi et al. 2018</a>)</span>. An overall accuracy of 95% can mask severe class-specific failures: if “bare earth” is systematically misclassified as “urban,” the consumer’s accuracy for urban will be inflated while the producer’s accuracy for bare earth collapses. This is why reporting only overall accuracy, without the full confusion matrix and class-specific metrics, is considered insufficient in the remote sensing literature.</p>
+<hr>
 </section>
-<section id="application-from-spectral-confusion-to-refined-mapping" class="level2">
-<h2 class="anchored" data-anchor-id="application-from-spectral-confusion-to-refined-mapping">Application: From Spectral Confusion to Refined Mapping</h2>
-<p>To implement the RF algorithm, I utilised Google Earth Engine (GEE) to classify Greater London into three primary classes: <strong>Water</strong> (blue), <strong>Urban</strong> (red), and <strong>Vegetation</strong> (green). My methodology involved an iterative refinement process to overcome initial technical hurdles.</p>
+<section id="application" class="level2">
+<h2 class="anchored" data-anchor-id="application">Application</h2>
+<p>I implemented a Random Forest classification of <strong>Greater London</strong> in GEE using Sentinel-2 surface reflectance, classifying the study area into three primary classes: <strong>Water</strong>, <strong>Urban</strong>, and <strong>Vegetation</strong>. The workflow followed the practical structure — drawing training polygons, extracting band values, training the classifier, and applying it to the full image — but revealed an instructive failure in the initial iteration.</p>
 <div class="quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-initial" class="quarto-float quarto-figure quarto-figure-left anchored" data-fig-align="left">
+<div id="fig-initial" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-initial-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="images/week6_classification.png" class="img-fluid quarto-figure quarto-figure-left figure-img">
+<img src="images/week6_classification.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-initial-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;7.1: Initial: Spectral Confusion (Shadows as Water)
+Figure&nbsp;7.1: Initial classification showing severe spectral confusion: building shadows in central London are misclassified as water, producing a “flooded city” artefact. The classifier, operating on individual 10 m pixels, cannot distinguish between the low-reflectance signatures of shadows and the Thames.
 </figcaption>
 </figure>
 </div>
 </div>
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-final" class="quarto-float quarto-figure quarto-figure-right anchored" data-fig-align="right">
+<div id="fig-refined" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-final-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="images/week62.png" class="img-fluid quarto-figure quarto-figure-right figure-img">
+<div aria-describedby="fig-refined-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/week62.png" class="img-fluid figure-img">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-final-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;7.2: Refined: Corrected with NDWI and Balanced Samples
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-refined-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.2: Refined classification after adding NDWI as an input band and providing targeted “shadow-urban” training samples. The Thames is now correctly delineated and shadow-induced misclassification is substantially reduced.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
 </div>
-<p>Figure 1: Comparison of Machine Learning iterations. The refined model (right) effectively resolved the initial misclassification of urban shadows as water bodies.</p>
-<p>To resolve this, I re-engineered the model by:</p>
-<ol type="1">
-<li><p><strong>Incorporating the NDWI band:</strong> Adding the Normalized Difference Water Index forced a spectral separation between aquatic features and terrestrial shadows.</p></li>
-<li><p><strong>Targeted Sampling:</strong> I provided the Random Forest with specific “shadow-urban” training points, teaching the model to recognise that dark pixels within high-density built environments are statistically more likely to be shadows than water bodies.</p></li>
-</ol>
-<p><strong>Figure 1:</strong> Comparison of Machine Learning iterations in GEE.</p>
-<p>As observed in initial, the initial pixel-based model suffered from significant <strong>Spectral Confusion</strong>. Because the model only examined individual 10m cells in isolation, it failed to distinguish between the low-reflectance values of <strong>building shadows</strong> in Central London and the <strong>River Thames</strong>, resulting in a “noisy” and geographically inaccurate “flooded” output.</p>
+<p>The initial result (<a href="#fig-initial" class="quarto-xref">Figure&nbsp;<span>7.1</span></a>) suffered from <strong>spectral confusion</strong> between water and shadow pixels. Both have low reflectance across visible bands, making them spectrally near-identical in feature space when only the standard Sentinel-2 bands are used. The classifier, processing each 10 m pixel in isolation with no spatial context, had no way to determine whether a dark pixel in Canary Wharf was a shadow cast by a skyscraper or a water body — both looked the same in the six-dimensional spectral space.</p>
+<p>To resolve this, I re-engineered the model in two ways:</p>
+<p><strong>First, I added the Normalised Difference Water Index (NDWI)</strong> as an additional input band. NDWI exploits the fact that water has distinctively high reflectance in the green band relative to NIR, while shadows do not — creating spectral separation in a dimension that the raw bands alone could not provide:</p>
+<p>```{js, eval=FALSE} // Add NDWI band to force spectral separation between water and shadow var addNDWI = function(image) { var ndwi = image.normalizedDifference([‘B3’, ‘B8’]).rename(‘NDWI’); return image.addBands(ndwi); };</p>
+<p>var composite = sentinel2_collection.map(addNDWI).median().clip(london);</p>
+<p>// Bands used for classification — now including NDWI var bands = [‘B2’, ‘B3’, ‘B4’, ‘B5’, ‘B6’, ‘B7’, ‘B8’, ‘NDWI’]; ```</p>
+<p><strong>Second, I provided targeted training samples</strong> — specifically drawing “shadow-urban” polygons over known shadow areas within dense built-up zones and labelling them as urban rather than water. This forced the RF to learn that dark pixels surrounded by high-reflectance built surfaces are contextually different from dark pixels adjacent to other water features.</p>
+<p>The refined result (<a href="#fig-refined" class="quarto-xref">Figure&nbsp;<span>7.2</span></a>) shows substantially improved classification, with the Thames correctly delineated and shadow-induced noise largely eliminated. This iterative process illustrates a broader point made by <span class="citation" data-cites="pal2005">Pal and Mather (<a href="references.html#ref-pal2005" role="doc-biblioref">2005</a>)</span>: the performance of any supervised classifier is bounded less by the algorithm itself than by the <strong>quality and representativeness of the training data</strong> and the <strong>feature engineering</strong> choices that define the input space. Adding NDWI did not change the classifier — it changed the geometry of feature space in a way that made the classification problem easier to solve.</p>
+<p>The practical also demonstrated the importance of <strong>pixel-level versus polygon-level train-test splitting</strong>. When the split was performed at the polygon level with only a small number of training polygons, the RF produced a visually worse classification with paradoxically high reported accuracy — because the few test polygons happened to be spectrally unambiguous. Switching to pixel-level splitting with 1,000 random points per class produced a more reliable accuracy estimate (~95% overall accuracy) and a visually superior classification, confirming that <strong>sample size and spatial independence of training data matter as much as classifier choice</strong>.</p>
+<hr>
 </section>
 <section id="reflection" class="level2">
 <h2 class="anchored" data-anchor-id="reflection">Reflection</h2>
-<p>The most striking lesson this week was the absolute truth of the <strong>“Garbage In, Garbage Out” (GIGO)</strong> principle. Despite its mathematical sophistication, the Random Forest algorithm is entirely at the mercy of the training data’s purity and representative power.</p>
-<p>Pixel-based classification inherently lacks <strong>Spatial Context</strong>. It processes each pixel as a silo, which is why it struggles with the “salt-and-pepper” noise seen in my first attempt. This week taught me that as a spatial analyst, my role is not just to “run the code,” but to critically interrogate the spectral overlap between classes and validate outputs against geographical reality. This experience provides a perfect logical bridge to <strong>Week 7</strong>, where I will move beyond isolated pixels to explore <strong>Object-Based Image Analysis (OBIA)</strong> to further refine these spatial boundaries.</p>
+<p>The most instructive moment this week was the initial classification failure. Seeing central London “flooded” by misclassified shadow pixels made the <strong>“garbage in, garbage out” principle</strong> viscerally concrete: a mathematically sophisticated 100-tree Random Forest, trained on spectrally ambiguous data, will confidently produce nonsensical outputs. The algorithm has no concept of geographic plausibility — it does not “know” that Canary Wharf is not underwater. This matters because automated classification at scale (e.g., producing annual LULC maps for all London boroughs to monitor Policy G5 compliance) requires <strong>training data that anticipates edge cases</strong>, not just the easy, spectrally distinct classes.</p>
+<p>Pixel-based classification inherently lacks <strong>spatial context</strong> — each pixel is classified in isolation, which is why the output exhibits the characteristic “salt-and-pepper” noise where individual pixels are assigned to implausible classes surrounded by a different dominant class. This limitation provides the logical bridge to next week’s content on <strong>Object-Based Image Analysis (OBIA)</strong>, which first segments the image into spectrally homogeneous regions and then classifies the segments — incorporating shape, size, and neighbourhood relationships that pixel-based approaches cannot access.</p>
+<p>One question this week raised for me is about <strong>transferability</strong>. The RF model I trained on London’s Sentinel-2 data in summer 2022 would almost certainly fail if applied to the same area in winter (different phenological state, different shadow geometry) or to a different city (different urban morphology, different vegetation types). <span class="citation" data-cites="pal2005">Pal and Mather (<a href="references.html#ref-pal2005" role="doc-biblioref">2005</a>)</span> note that SVMs can outperform RF in situations with small training samples, but the deeper issue is that supervised classifiers are fundamentally <strong>local and temporal</strong> — they learn the spectral-class relationships present in their training data and cannot generalise beyond that context without retraining. For operational urban monitoring, this means that either training data must be regenerated for each time step (expensive), or the approach must shift toward transfer learning or semi-supervised methods that can adapt to distributional shifts — an active area of research that the module will presumably return to.</p>
+<hr>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-barsi2018" class="csl-entry" role="listitem">
+Barsi, Árpád, Zsolt Kugler, István László, György Szabó, and Hussain M. Abdulmutalib. 2018. <span>“Accuracy Dimensions in Remote Sensing.”</span> In <em>International Archives of the Photogrammetry, Remote Sensing &amp; Spatial Information Sciences</em>. Vol. 42.
+</div>
+<div id="ref-jensen2015" class="csl-entry" role="listitem">
+Jensen, John R. 2015. <em>Introductory Digital Image Processing: A Remote Sensing Perspective</em>. 4th ed. Prentice Hall.
+</div>
+<div id="ref-pal2005" class="csl-entry" role="listitem">
+Pal, Mahesh, and Paul M. Mather. 2005. <span>“Support Vector Machines for Classification in Remote Sensing.”</span> <em>International Journal of Remote Sensing</em> 26 (5): 1007–11.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -641,8 +690,8 @@ Figure&nbsp;7.2: Refined: Corrected with NDWI and Balanced Samples
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./week5.html" class="pagination-link" aria-label="week5">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">week5</span></span>
+      <a href="./week5.html" class="pagination-link" aria-label="Week 5: Google Earth Engine I">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Week 5: Google Earth Engine I</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

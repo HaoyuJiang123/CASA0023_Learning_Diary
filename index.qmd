@@ -4,14 +4,13 @@ author: "Haoyu Jiang"
 ---
 
 # Welcome & Personal Introduction
-## About Me 
 
-Hello, my name is Haoyu Jiang. I am currently a postgraduate student at the Centre for Advanced Spatial Analysis (CASA), University College London, pursuing an MSc in Urban Spatial Science (2025–2026). My academic background in Landscape Architecture has given me practical experience in urban spatial accessibility, sustainable landscape design, and public space regeneration. 
+## About Me
 
- I am particularly excited to engage with CASA0023 because this module offers a unique opportunity to deepen my understanding of Earth Observation (EO) tools, spatial data analysis, and remote sensing applications in urban contexts. I am eager to learn how to acquire, preprocess, and analyze EO datasets using platforms such as Google Earth Engine, GIS, and Python, and to explore their potential for addressing complex urban questions.
+Hello, my name is Haoyu Jiang. I am currently a postgraduate student at the Centre for Advanced Spatial Analysis (CASA), University College London, pursuing an MSc in Urban Spatial Science (2025–2026). My academic background in Landscape Architecture has given me practical experience in urban spatial accessibility, sustainable landscape design, and public space regeneration.
+
+I am particularly excited to engage with CASA0023 because this module offers a unique opportunity to deepen my understanding of Earth Observation (EO) tools, spatial data analysis, and remote sensing applications in urban contexts. I am eager to learn how to acquire, preprocess, and analyze EO datasets using platforms such as Google Earth Engine, GIS, and Python, and to explore their potential for addressing complex urban questions.
 
 I am motivated by the chance to develop practical skills in spatial analysis, data visualization, and integrating EO data into urban studies workflows. Through this module, I aim to gain hands-on experience that can strengthen my technical capabilities, improve my analytical thinking, and provide transferable skills applicable to both academic and professional contexts.
 
 Finally, maintaining a weekly learning diary will allow me to reflect critically on the methods and tools I use, understand their advantages and limitations, and consider how they can inform future urban projects or professional practice. This reflective process is an essential part of my learning, helping me connect technical skills to broader analytical and decision-making contexts.
-
-

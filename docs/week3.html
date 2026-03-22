@@ -20,7 +20,62 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -71,6 +126,35 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -135,17 +219,28 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week5.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">week5</span></a>
+  <a href="./week5.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 5: Google Earth Engine I</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week6.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 6: Machine Learning and Land Cover Classification</span></a>
+  <a href="./week6.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 6: Classification I — Supervised Land Cover Mapping</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./week7.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 7: Advanced Classification</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week8.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 8: Synthetic Aperture Radar (SAR)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
   </div>
 </li>
     </ul>
@@ -158,17 +253,9 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#summary-from-raw-data-to-analysis-ready-data-ard" id="toc-summary-from-raw-data-to-analysis-ready-data-ard" class="nav-link active" data-scroll-target="#summary-from-raw-data-to-analysis-ready-data-ard">1. Summary: From Raw Data to Analysis Ready Data (ARD)</a>
-  <ul class="collapse">
-  <li><a href="#key-correction-mechanisms" id="toc-key-correction-mechanisms" class="nav-link" data-scroll-target="#key-correction-mechanisms">Key Correction Mechanisms:</a></li>
-  </ul></li>
-  <li><a href="#applications-enhancing-urban-heterogeneity" id="toc-applications-enhancing-urban-heterogeneity" class="nav-link" data-scroll-target="#applications-enhancing-urban-heterogeneity">2. Applications: Enhancing Urban Heterogeneity</a>
-  <ul class="collapse">
-  <li><a href="#principal-component-analysis-pca" id="toc-principal-component-analysis-pca" class="nav-link" data-scroll-target="#principal-component-analysis-pca">Principal Component Analysis (PCA)</a></li>
-  <li><a href="#texture-analysis-glcm" id="toc-texture-analysis-glcm" class="nav-link" data-scroll-target="#texture-analysis-glcm">Texture Analysis (GLCM)</a></li>
-  </ul></li>
-  <li><a href="#reflection-the-physics-of-better-data" id="toc-reflection-the-physics-of-better-data" class="nav-link" data-scroll-target="#reflection-the-physics-of-better-data">3. Reflection: The Physics of “Better” Data</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#application" id="toc-application" class="nav-link" data-scroll-target="#application">Application</a></li>
+  <li><a href="#reflection" id="toc-reflection" class="nav-link" data-scroll-target="#reflection">Reflection</a></li>
   </ul>
 </nav>
     </div>
@@ -194,56 +281,124 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="summary-from-raw-data-to-analysis-ready-data-ard" class="level2">
-<h2 class="anchored" data-anchor-id="summary-from-raw-data-to-analysis-ready-data-ard">1. Summary: From Raw Data to Analysis Ready Data (ARD)</h2>
-<p>The core theme of this week was the transition of Earth Observation (EO) data from raw digital numbers (DN) to <strong>Analysis Ready Data (ARD)</strong>. As Andrew noted in the lecture, while modern platforms like Google Earth Engine often provide preprocessed products, understanding the underlying physical corrections remains essential for scientific integrity.</p>
-<section id="key-correction-mechanisms" class="level3">
-<h3 class="anchored" data-anchor-id="key-correction-mechanisms">Key Correction Mechanisms:</h3>
-<ul>
-<li><p><strong>Geometric Correction and Orthorectification:</strong> This process removes internal and external geometric errors caused by sensor tilt and topographic relief. By using Ground Control Points (GCPs) and Digital Elevation Models (DEMs), pixels are accurately mapped to their true geographic coordinates.</p></li>
-<li><p><strong>Atmospheric Correction:</strong> This is perhaps the most critical step for urban studies. It accounts for scattering (Rayleigh and Mie) and absorption by atmospheric gases and aerosols. <strong>Absolute Correction</strong> (e.g., Sen2Cor for Sentinel-2) converts Top of Atmosphere (TOA) radiance to Bottom of Atmosphere (BOA) surface reflectance. <strong>Relative Correction</strong> (e.g., Dark Object Subtraction) provides a simpler alternative by assuming the darkest pixels should have zero reflectance.</p></li>
-<li><p><strong>Topographic Correction:</strong> Essential for rugged terrains, this ensures that the same land cover (e.g., a forest) shows consistent spectral signatures regardless of whether it is on a sunlit slope or in a shadow.</p></li>
-</ul>
-<p><strong>Independent Thought:</strong> A significant takeaway this week is the “black box” risk of ARD. While ESA or USGS provide pre-processed products, different algorithms (e.g., DOS vs.&nbsp;6S) can yield different reflectance values. For urban researchers, choosing the wrong correction level in highly polluted cities could lead to “over-correction,” where urban haze is mistaken for surface features. Therefore, metadata validation is not just a technical step, but a requirement for geographical accuracy.</p>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>This week’s lecture opened with a useful framing: nearly all Earth observation data now comes as <strong>Analysis Ready Data (ARD)</strong>, meaning the corrections covered this week have largely been automated in operational pipelines. The reason to understand them anyway is that loading a Landsat image in Google Earth Engine still requires choosing between Level-1 DN, Level-2 surface reflectance, and Level-3 science products — and that choice has real consequences for what the values in your raster actually mean. The lecturer’s point that some researchers make this choice without understanding it was a sharp reminder that familiarity with a tool is not the same as understanding the data it produces.</p>
+<p>The corrections follow a fixed order: <strong>geometric → atmospheric → orthorectification</strong>. Geometric correction aligns an image to a known coordinate reference system by identifying Ground Control Points (GCPs) at stable features — roads, boundaries, buildings — fitting a regression between their positions in the distorted image and a reference dataset, and warping the image accordingly. The reason <strong>backward mapping</strong> is preferred over forward mapping is worth noting: forward mapping can produce predicted positions that fall between grid cells, creating output pixels with no assignable value, whereas backward mapping guarantees a value for every output pixel. After warping, resampling — nearest neighbour, bilinear, or cubic convolution — snaps the transformed grid back to integer positions.</p>
+<p>Atmospheric correction addresses the contamination introduced by <strong>path radiance</strong> (EMR scattered into the sensor before touching the surface) and the <strong>adjacency effect</strong> (radiance bleeding from neighbouring pixels). Dark Object Subtraction (DOS) is the simplest relative approach: identify the darkest pixel in each band, assume it represents a surface with near-zero true reflectance, and subtract its value from all other pixels. The underlying logic — that any signal from a truly black surface must be atmospheric — is reasonable but approximate, which is why DOS is considered a lower bound rather than a rigorous correction <span class="citation" data-cites="jensen2015">(<a href="references.html#ref-jensen2015" role="doc-biblioref">Jensen 2015</a>)</span>. The more sophisticated COST variant incorporates the cosine of the solar zenith angle (<span class="math inline">\(\tau_z\)</span>), while Pseudo-Invariant Features (PIFs) offer a more principled relative method, using regression across stable surfaces to normalise multiple images to a single reference date.</p>
+<p>DN is a dimensionless, sensor-specific integer with no physical meaning beyond efficient storage. Radiance, obtained via <span class="math inline">\(L_\lambda = Bias + Gain \times DN\)</span> using lab-calibrated coefficients, gives the quantity in meaningful units (W·m⁻²·sr⁻¹·μm⁻¹). Surface reflectance then removes the effects of both illumination conditions and the atmosphere, leaving a value that is a property of the surface itself — and therefore <strong>comparable across acquisitions</strong>. TOA reflectance occupies an intermediate position: illumination effects removed, but atmosphere still present. Some papers use TOA on the grounds that scenes were clear enough that residual atmospheric effects were negligible — a judgement call that should at minimum be stated explicitly.</p>
 <hr>
 </section>
-</section>
-<section id="applications-enhancing-urban-heterogeneity" class="level2">
-<h2 class="anchored" data-anchor-id="applications-enhancing-urban-heterogeneity">2. Applications: Enhancing Urban Heterogeneity</h2>
-<p>Urban environments are notoriously difficult to classify due to their high spectral heterogeneity. This week, I explored two powerful enhancement techniques to address this:</p>
-<section id="principal-component-analysis-pca" class="level3">
-<h3 class="anchored" data-anchor-id="principal-component-analysis-pca">Principal Component Analysis (PCA)</h3>
-<p>PCA serves as a dimensionality reduction tool that transforms highly correlated multi-spectral bands into a smaller set of uncorrelated components.</p>
-<ul>
-<li><strong>Application:</strong> In urban change detection, the first principal component (PC1) usually captures the major albedo variations, while subsequent components can highlight subtle changes like new construction or vegetation loss. This reduces computational redundancy while preserving over 90% of the original information.</li>
-</ul>
-</section>
-<section id="texture-analysis-glcm" class="level3">
-<h3 class="anchored" data-anchor-id="texture-analysis-glcm">Texture Analysis (GLCM)</h3>
-<p>Unlike spectral analysis which looks at “what” a pixel is, texture analysis looks at “how” pixels are arranged. Based on the Grey Level Co-occurrence Matrix (GLCM), it measures spatial variations such as contrast, correlation, and entropy.</p>
-<ul>
-<li><strong>Application:</strong> This is transformative for distinguishing urban land uses that appear spectrally identical. For example, a high-density informal settlement and a formal industrial warehouse area might both reflect “grey” (concrete/metal) in spectral bands. However, their spatial textures—highly fragmented for settlements versus uniform for warehouses—allow for precise differentiation using GLCM filters.</li>
-</ul>
+<section id="application" class="level2">
+<h2 class="anchored" data-anchor-id="application">Application</h2>
+<p>The practical used <strong>Landsat 8 and 9 imagery over Cape Town</strong>, which requires at least two tiles to cover the metropolitan area — a direct consequence of Landsat’s Worldwide Reference System (WRS-2) grid not aligning with administrative boundaries. The tiles were loaded and mosaicked using <code>terra::mosaic()</code>:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fs)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>listlandsat_8 <span class="ot">&lt;-</span> <span class="fu">dir_info</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"prac_3"</span>, <span class="st">"Landsat"</span>, <span class="st">"Lsat8"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="fu">str_detect</span>(path, <span class="st">"[B123456790].TIF"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(path) <span class="sc">%&gt;%</span> <span class="fu">pull</span>() <span class="sc">%&gt;%</span> <span class="fu">as.character</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  terra<span class="sc">::</span><span class="fu">rast</span>()</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>listlandsat_9 <span class="ot">&lt;-</span> <span class="fu">dir_info</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"prac_3"</span>, <span class="st">"Landsat"</span>, <span class="st">"Lsat9"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="fu">str_detect</span>(path, <span class="st">"[1B23456790].TIF"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(path) <span class="sc">%&gt;%</span> <span class="fu">pull</span>() <span class="sc">%&gt;%</span> <span class="fu">as.character</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  terra<span class="sc">::</span><span class="fu">rast</span>()</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">mosaic</span>(listlandsat_8, listlandsat_9, <span class="at">fun=</span><span class="st">"mean"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Taking the mean in the overlap zone is a practical compromise, but it papers over a real issue: even as ARD products, tiles acquired on different dates carry different atmospheric states, and their surface reflectance values may not be perfectly consistent over identical surface features. The mean averages the inconsistency rather than resolving it. <span class="citation" data-cites="schultetobuhne2018">Schulte to Bühne and Pettorelli (<a href="references.html#ref-schultetobuhne2018" role="doc-biblioref">2018</a>)</span> discuss the broader challenge of integrating multi-source imagery, noting that even after atmospheric correction, residual systematic differences between acquisitions can propagate into derived products — a point that becomes critical for change detection applications where the signal of interest may be smaller than the inter-scene noise.</p>
+<p><strong>NDVI</strong> was then computed and thresholded to isolate vegetated areas:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>m1_NDVI <span class="ot">&lt;-</span> (m1_clip<span class="sc">$</span>LC08_L2SP_175083_20220501_20220504_02_T1_SR_B5 <span class="sc">-</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>            m1_clip<span class="sc">$</span>LC08_L2SP_175083_20220501_20220504_02_T1_SR_B4) <span class="sc">/</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>           (m1_clip<span class="sc">$</span>LC08_L2SP_175083_20220501_20220504_02_T1_SR_B5 <span class="sc">+</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>            m1_clip<span class="sc">$</span>LC08_L2SP_175083_20220501_20220504_02_T1_SR_B4)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>veg <span class="ot">&lt;-</span> m1_NDVI <span class="sc">%&gt;%</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  terra<span class="sc">::</span><span class="fu">classify</span>(., <span class="fu">cbind</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="fl">0.2</span>, <span class="cn">NA</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/ndvi_result3.png" class="img-fluid figure-img"></p>
+<figcaption>NDVI result for Cape Town study area. Values above 0.2 (green) indicate vegetated surfaces; values below 0.2 are masked. Note that Cape Town’s dominant fynbos shrubland often produces NDVI values between 0.1–0.2, meaning a blanket 0.2 threshold may exclude ecologically meaningful vegetation.</figcaption>
+</figure>
+</div>
+<p>The 0.2 threshold is widely used but <strong>context-dependent</strong>. For Cape Town’s fynbos — a low-growing shrubland that is the city’s dominant natural vegetation type — values between 0.1 and 0.2 are common, particularly in drier months. A blanket 0.2 cut-off would exclude a significant portion of ecologically meaningful vegetation, which matters if the downstream application is green space access or heat stress mapping. This highlights a broader point: spectral indices are not neutral transforms — the choice of threshold encodes assumptions about what counts as “vegetation” that may not hold across biomes.</p>
+<p><strong>Texture analysis</strong> used <code>GLCMTextures</code> on Band 4 with a 7×7 window to compute GLCM homogeneity. A critical preprocessing step is rescaling the data — Landsat Level-2 products store reflectance as scaled integers, and texture metrics computed on raw integers would be physically meaningless:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLCMTextures)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>scale <span class="ot">&lt;-</span> (m1_clip <span class="sc">*</span> <span class="fl">0.0000275</span>) <span class="sc">+</span> <span class="sc">-</span><span class="fl">0.2</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>textures1 <span class="ot">&lt;-</span> <span class="fu">glcm_textures</span>(</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  scale<span class="sc">$</span>LC08_L2SP_175083_20220501_20220504_02_T1_SR_B4,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">w =</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">7</span>),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_levels =</span> <span class="dv">4</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">quant_method =</span> <span class="st">"range"</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">shift =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>), <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>)),</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="st">"glcm_homogeneity"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/texture_homogeneity.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<figcaption>GLCM homogeneity texture output. High homogeneity (bright) indicates uniform areas — water bodies, formal housing with regular rooftops — while low homogeneity (dark) indicates heterogeneous areas such as informal settlements, construction sites, and fragmented vegetation-building mixes.</figcaption>
+</figure>
+</div>
+<p>Homogeneity captures information that <strong>spectral band values alone cannot</strong>: two areas with identical mean NIR reflectance may look completely different in texture if one is a uniform park canopy and the other is a fragmented mix of trees and rooftops. <span class="citation" data-cites="lu2012">Lu et al. (<a href="references.html#ref-lu2012" role="doc-biblioref">2012</a>)</span> demonstrated this in Brazilian Amazon land cover classification, where adding GLCM texture features substantially improved discrimination between forest types with near-identical spectral signatures — a finding directly relevant to urban contexts where built form diversity is high but spectral contrast is low.</p>
+<p>The texture band was then fused with spectral data and reduced via <strong>PCA</strong>, with centering and scaling applied to prevent variables with larger numerical ranges from dominating the components:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>raster_and_texture <span class="ot">&lt;-</span> <span class="fu">c</span>(m1_clip, textures1)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>pca <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(<span class="fu">as.data.frame</span>(raster_and_texture, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">center=</span><span class="cn">TRUE</span>, <span class="at">scale=</span><span class="cn">TRUE</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">predict</span>(raster_and_texture, pca)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/pca_result.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<figcaption>PCA output showing the first three principal components. PC1 typically captures the overall brightness gradient (variance explained &gt; 80%), while PC2 and PC3 isolate spectral and textural contrasts that distinguish land cover types more effectively than individual bands.</figcaption>
+</figure>
+</div>
+<p>PCA takes advantage of <strong>multicollinearity</strong> between bands — a problem in regression but an asset here — to produce uncorrelated components that concentrate information. The practical benefit is dimensionality reduction: rather than feeding 8+ correlated spectral and texture bands into a classifier, the first 3–4 PCA components often capture &gt;95% of the variance in a fraction of the computational cost.</p>
 <hr>
 </section>
-</section>
-<section id="reflection-the-physics-of-better-data" class="level2">
-<h2 class="anchored" data-anchor-id="reflection-the-physics-of-better-data">3. Reflection: The Physics of “Better” Data</h2>
-<p>Reflecting on this week, I’ve realized that “better” data is not necessarily “higher resolution” data, but “cleaner” and “more transformed” data.</p>
-<ul>
-<li><p><strong>Scientific Rigor:</strong> The lecture on atmospheric correction reinforced that remote sensing is a physical measurement of energy. If we ignore the atmosphere, we are measuring the “air,” not the “city.” This has made me much more cautious about using raw TOA data for multi-temporal studies.</p></li>
-<li><p><strong>Methodological Choice:</strong> I was particularly intrigued by the trade-offs between complex physical models and simple empirical methods like DOS. In a resource-constrained project, a “good enough” relative correction might be superior to a complex model that lacks local aerosol data.</p></li>
-<li><p><strong>Future Integration:</strong> Moving forward, I plan to integrate <strong>Texture Analysis</strong> into my group project. Recognizing that spectral signatures alone cannot define the complexity of urban morphology, I see spatial metrics as the bridge between “Remote Sensing” and “Urban Planning.”</p></li>
-</ul>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li><p><strong>Jensen, J. R. (2015).</strong> <em>Introductory Digital Image Processing: A Remote Sensing Perspective</em>. Pearson.</p></li>
-<li><p><strong>Schläpfer, D., et al.&nbsp;(2015).</strong> <em>Atmospheric Proximal Sensing and Correction for Remote Sensing</em>.</p></li>
-</ul>
+<section id="reflection" class="level2">
+<h2 class="anchored" data-anchor-id="reflection">Reflection</h2>
+<p>The most useful shift this week was in how I think about what “using satellite data” actually means. Before, I would have treated loading a Landsat image as a neutral act — the data is the data. Now I see there is a real difference between a researcher who can explain what <strong>collection, level, and processing model</strong> their data went through and one who cannot. That difference probably doesn’t matter for a single-date, single-sensor classification, but it matters enormously for anything involving long time series or cross-sensor comparison — which is most of the research questions this module is pointing towards.</p>
+<p>On texture: the GLCM homogeneity output is essentially a <strong>spatial derivative</strong> — it responds to edges and transitions rather than mean values. For urban analysis, this means building outlines, road margins, and land cover boundaries all become detectable even when the spectral values on either side are similar. I found this genuinely useful to think through, and it suggests that for fine-grained urban classification, texture in SWIR or NIR is probably not optional — it is a necessary complement to spectral information.</p>
+<p>One question I have not resolved: the practical used a <strong>7×7 window on 30 m Landsat</strong>, which covers a 210 m ground footprint per texture pixel. At that scale, individual buildings and street trees are subsumed within a single kernel. For 10 m Sentinel-2 the same window would cover 70 m — much closer to the scale of urban features I would want to detect. I am not clear whether there is a principled method for choosing window size relative to resolution and target feature scale, or whether it is largely empirical. <span class="citation" data-cites="hall-beyer2017">Hall-Beyer (<a href="references.html#ref-hall-beyer2017" role="doc-biblioref">2017</a>)</span> notes that window size should approximate the spatial extent of the texture pattern of interest, but in practice most studies appear to use 3×3, 5×5, or 7×7 without rigorous justification. This seems like a parameter choice that could meaningfully affect classification accuracy in dense urban environments, and something worth investigating systematically when we move to Google Earth Engine later in the module.</p>
+<hr>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-hall-beyer2017" class="csl-entry" role="listitem">
+Hall-Beyer, Mryka. 2017. <span>“Practical Guidelines for Choosing <span>GLCM</span> Textures to Use in Landscape Classification Tasks over a Range of Sensor Resolutions.”</span> <em>International Journal of Remote Sensing</em> 38 (5): 1312–38.
+</div>
+<div id="ref-jensen2015" class="csl-entry" role="listitem">
+Jensen, John R. 2015. <em>Introductory Digital Image Processing: A Remote Sensing Perspective</em>. 4th ed. Prentice Hall.
+</div>
+<div id="ref-lu2012" class="csl-entry" role="listitem">
+Lu, Dengsheng, Guiying Li, Emilio Moran, Luciano Dutra, and Mateus Batistella. 2012. <span>“Land Use/Cover Classification in the <span>Brazilian Amazon</span> Using Satellite Images.”</span> <em>Pesquisa Agropecu<span>á</span>ria Brasileira</em> 47 (9): 1185–1208.
+</div>
+<div id="ref-schultetobuhne2018" class="csl-entry" role="listitem">
+Schulte to Bühne, Henrike, and Nathalie Pettorelli. 2018. <span>“Better Together: Integrating and Fusing Multispectral and Radar Satellite Imagery to Inform Biodiversity Monitoring, Ecological Research and Conservation Science.”</span> <em>Methods in Ecology and Evolution</em> 9 (4): 849–65.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->

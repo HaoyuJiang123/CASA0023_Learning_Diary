@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>week5 – CASA0023 Learning Diary</title>
+<title>Week 5: Google Earth Engine I – CASA0023 Learning Diary</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -83,7 +103,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week5.html"><span class="chapter-title">week5</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week5.html"><span class="chapter-title">Week 5: Google Earth Engine I</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -135,17 +155,28 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week5.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">week5</span></a>
+  <a href="./week5.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Week 5: Google Earth Engine I</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week6.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 6: Machine Learning and Land Cover Classification</span></a>
+  <a href="./week6.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 6: Classification I — Supervised Land Cover Mapping</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./week7.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 7: Advanced Classification</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week8.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 8: Synthetic Aperture Radar (SAR)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
   </div>
 </li>
     </ul>
@@ -158,7 +189,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#application" id="toc-application" class="nav-link active" data-scroll-target="#application">Application</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#application" id="toc-application" class="nav-link" data-scroll-target="#application">Application</a></li>
   <li><a href="#reflection" id="toc-reflection" class="nav-link" data-scroll-target="#reflection">Reflection</a></li>
   </ul>
 </nav>
@@ -168,7 +200,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-title">week5</span></h1>
+<h1 class="title"><span class="chapter-title">Week 5: Google Earth Engine I</span></h1>
 </div>
 
 
@@ -185,34 +217,54 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>## Summary</p>
-<p>This week marked a critical transition from local, hardware-dependent processing (e.g., in R or QGIS) to cloud-based, planetary-scale analysis using **Google Earth Engine (GEE)**. The core of this week’s learning was understanding GEE’s fundamental architecture, specifically the distinction between the **Client-side** and the **Server-side**.</p>
-<p>Key conceptual shifts included:</p>
-<p><u>*</u> **The Client/Server Model:** The JavaScript code written in the browser (Client) acts merely as a set of instructions. These instructions are sent to Google’s supercomputers (Server), where the heavy lifting occurs, and only the final visualised pixels or statistics are returned. <u>*</u> **Iteration without Loops:** I learned to abandon traditional `for-loops`—which are inefficient and prone to crashing when handling large spatial datasets—in favour of the `.map()` function. This allows operations (like cloud masking) to be applied across thousands of images simultaneously. <u>*</u> **Reducers and Scale:** GEE handles spatial and temporal aggregation through *Reducers* (e.g., using `.median()` to composite a cloud-free image). Crucially, GEE employs a **pyramiding policy**, dynamically adjusting the computation scale (resolution) based on the zoom level, which is fundamentally different from static local processing.</p>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>This week marked a fundamental shift from local, hardware-dependent processing in R to <strong>cloud-based, planetary-scale analysis</strong> using Google Earth Engine (GEE). Where previous weeks required downloading gigabytes of Landsat tiles, managing file paths, and waiting minutes for texture computations to complete on a local machine, GEE performs equivalent operations in seconds on Google’s server infrastructure — a difference that is not merely convenient but structurally changes what kinds of analysis are feasible.</p>
+<p>The core conceptual framework is the <strong>client-server model</strong>. The JavaScript code written in the GEE Code Editor (client) does not process data locally — it constructs a computational graph that is transmitted to Google’s servers, where the actual computation occurs on distributed infrastructure. Only the final result (a rendered map tile, a statistic, a chart) is returned to the browser. This architecture has three important consequences. First, <strong>data never needs to be downloaded</strong>: the entire Landsat, Sentinel, and MODIS archives (among others) are co-located with the computation, eliminating the bottleneck that dominated previous weeks’ workflows. Second, <strong>iteration must be rethought</strong>: traditional <code>for</code> loops execute sequentially on the client and are prohibitively slow; instead, GEE uses the <code>.map()</code> function to apply operations across entire <code>ee.ImageCollection</code> objects in parallel on the server <span class="citation" data-cites="gorelick2017">(<a href="references.html#ref-gorelick2017" role="doc-biblioref">Gorelick et al. 2017</a>)</span>. Third, GEE’s <strong>lazy evaluation</strong> means that computation only occurs when a result is explicitly requested — adding layers to the map, printing statistics, or exporting data — which makes exploratory analysis fast but can make debugging unintuitive.</p>
+<p>The practical introduced key GEE operations through a Landsat workflow over Delhi: loading an <code>ee.ImageCollection</code>, filtering by date, bounds, and cloud cover, applying <strong>scale factors</strong> (the same <code>× 0.0000275 + (−0.2)</code> conversion from Week 3, but now wrapped in a <code>.map()</code> function applied to the entire collection), reducing the collection to a single composite via <code>ee.Reducer.median()</code>, computing texture via <code>.glcmTexture()</code>, and running PCA through eigen decomposition. What took dozens of lines and several minutes of processing in R (Week 3) was accomplished in a fraction of the time — the same analytical workflow, but at a fundamentally different scale.</p>
+<p>One concept I found particularly important is the <strong>scale (resolution) model</strong>. GEE does not have a fixed processing resolution — it dynamically adjusts computation based on the zoom level of the map view and the <code>scale</code> parameter specified in <code>reduceRegion()</code> calls. This means the same code can produce different numerical results depending on the context in which it is executed, which is a potential source of error if not explicitly controlled. <span class="citation" data-cites="gorelick2017">Gorelick et al. (<a href="references.html#ref-gorelick2017" role="doc-biblioref">2017</a>)</span> note that users should always specify the <code>scale</code> parameter rather than relying on defaults, particularly when exporting data or computing statistics for policy-relevant applications.</p>
+<hr>
+</section>
 <section id="application" class="level2">
 <h2 class="anchored" data-anchor-id="application">Application</h2>
-<p>While my Week 4 diary explored the *spatial* distribution of urban indices, the true analytical power of an `ee.ImageCollection` lies in its *temporal* depth. To demonstrate this, I applied this week’s concepts to monitor the long-term vegetation dynamics of Richmond Park, London.</p>
-<p>Instead of downloading gigabytes of Sentinel-2 data to plot a trend locally, I used GEE’s `ui.Chart` function alongside a temporal Reducer to instantly process 5 years of surface reflectance data (2019–2023) directly on the server.</p>
-<div id="fig-chart" class="quarto-float quarto-figure quarto-figure-center anchored">
+<p>To build on the Week 4 policy analysis of London’s Urban Greening Factor (Policy G5), I used GEE to construct a <strong>5-year NDVI time-series for Richmond Park</strong> — one of London’s largest green spaces — using Sentinel-2 surface reflectance data from 2019 to 2023. The aim was to demonstrate that GEE enables temporal monitoring at a scale and speed impossible with local processing.</p>
+<p>The workflow in GEE follows a reproducible pattern:</p>
+<p>```{js, eval=FALSE} // Load Sentinel-2 SR, filter by date, bounds, and cloud cover var s2 = ee.ImageCollection(‘COPERNICUS/S2_SR_HARMONIZED’) .filterDate(‘2019-01-01’, ‘2024-01-01’) .filterBounds(richmond_park) .filter(ee.Filter.lt(‘CLOUDY_PIXEL_PERCENTAGE’, 10));</p>
+<p>// Compute NDVI for each image in the collection var addNDVI = function(image) { var ndvi = image.normalizedDifference([‘B8’, ‘B4’]).rename(‘NDVI’); return image.addBands(ndvi); };</p>
+<p>var s2_ndvi = s2.map(addNDVI);</p>
+<p>// Chart the NDVI time-series var chart = ui.Chart.image.series({ imageCollection: s2_ndvi.select(‘NDVI’), region: richmond_park, reducer: ee.Reducer.mean(), scale: 10 }).setOptions({title: ‘NDVI Time-Series: Richmond Park (2019–2023)’});</p>
+<p>print(chart); ```</p>
+<div id="fig-ndvi-timeseries" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-chart-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<p>![](images/ee-chart.png){width=85% fig-align=“center”}</p>
+<div aria-describedby="fig-ndvi-timeseries-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/ee-chart.png" class="img-fluid figure-img" style="width:90.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chart-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6.1: Figure 1: A 5-year NDVI time-series chart for Richmond Park, generated directly in GEE. The chart captures the seasonal phenology (summer peaks and winter troughs) and allows policymakers to identify abnormal drops in vegetation health due to specific climatic events.
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ndvi-timeseries-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.1: A 5-year NDVI time-series for Richmond Park, London, generated in GEE from Sentinel-2 surface reflectance. The seasonal phenological cycle — summer peaks (NDVI ~0.7–0.8) and winter troughs (~0.3–0.4) — is clearly visible. Anomalous dips in summer 2022 correspond to the extreme heatwave and drought event that affected southern England, causing widespread vegetation stress and browning of grasslands.
 </figcaption>
 </figure>
 </div>
-<p>This application proves that GEE is not merely a mapping tool, but a highly efficient **monitoring dashboard**. For policymakers (referencing last week’s focus on the London Plan), such temporal charts provide immediate evidence on whether urban greening initiatives are thriving or degrading over the years.</p>
+<p>The time-series in <a href="#fig-ndvi-timeseries" class="quarto-xref">Figure&nbsp;<span>6.1</span></a> reveals several patterns. The regular <strong>seasonal phenology</strong> — peak greenness in June-July, minimum in December-January — is the expected signal from deciduous broadleaved vegetation in a temperate maritime climate. More interesting is the anomalous dip in <strong>summer 2022</strong>, which coincides with the record-breaking heatwave that saw temperatures exceed 40°C in London for the first time. This kind of event detection — identifying departures from expected seasonal patterns — is precisely what makes temporal EO analysis valuable for policy: it provides spatially explicit, objective evidence of environmental stress that complements ground-based weather station data.</p>
+<p><span class="citation" data-cites="amani2020">Amani et al. (<a href="references.html#ref-amani2020" role="doc-biblioref">2020</a>)</span> conducted a comprehensive review of GEE applications across remote sensing domains and found that urban and environmental monitoring studies have grown exponentially since 2017, driven by GEE’s elimination of data storage and processing barriers. They note that the platform has been particularly transformative for <strong>time-series analysis</strong> — studies that would previously require months of data management now take hours. However, they also flag that the ease of producing results in GEE can lead to <strong>methodologically superficial analyses</strong> if users do not carefully specify scale parameters, cloud masking thresholds, and temporal compositing strategies — choices that materially affect outputs but are easy to overlook when computation is instant.</p>
+<p>For London’s Policy G5 monitoring, this application demonstrates a concrete pathway: an annual or seasonal Sentinel-2 NDVI composite across all London boroughs, computed entirely in GEE, could provide the GLA with a <strong>systematic, repeatable baseline</strong> for tracking whether the Urban Greening Factor is delivering measurable increases in vegetation cover. The processing cost is effectively zero — the only requirement is the analytical expertise to design an appropriate workflow, which is exactly what this module is teaching.</p>
+<hr>
 </section>
 <section id="reflection" class="level2">
 <h2 class="anchored" data-anchor-id="reflection">Reflection</h2>
-<p>Reflecting on this week’s coding exercises, my “Aha!” moment was realising the sheer scale of computation happening behind the scenes. In previous weeks, downloading, atmospheric correcting, and processing a single Landsat scene in R required significant time and memory. In GEE, computing a 5-year NDVI trend takes mere seconds.</p>
-<p>The most profound takeaway is the **democratisation of spatial data**. GEE removes the financial and hardware barriers to Earth Observation. A researcher or a local municipality in a developing nation with only a basic laptop and an internet connection now has the exact same analytical power as a well-funded western institution.</p>
-<p>However, critical evaluation is necessary. GEE relies on a highly specific JavaScript API, resulting in a steep learning curve and a significant risk of **“vendor lock-in”**—relying entirely on Google’s proprietary infrastructure. If Google decides to charge for this service or alter the API, decades of open-source research workflows could be disrupted. Furthermore, while GEE excels at pixel-based algebra and data reduction (turning petabytes into megabytes), traditional topological vector operations (like complex spatial joins or network analysis) are still better suited for desktop GIS software.</p>
-<p>Moving forward, I view GEE as the ultimate “first step” in the spatial pipeline: a tool to reduce planetary data into manageable trends and layers, which can then be exported for fine-tuned, localised policy analysis.</p>
+<p>The most visceral shift this week was the contrast in <strong>processing speed and scale</strong>. In Week 3, downloading two Landsat tiles for London, loading them in R, mosaicking, scaling, computing NDVI, running GLCM texture, and performing PCA took the better part of an afternoon and required careful memory management. In GEE, the equivalent workflow — applied not to two tiles but to an entire multi-year image collection — executes in seconds. This is not a marginal improvement; it fundamentally changes what questions are worth asking. Time-series analysis across a decade, comparison of seasonal patterns across cities, continental-scale land cover mapping — all become feasible as routine exploratory analysis rather than major computational undertakings.</p>
+<p>However, critical evaluation is warranted. GEE represents a significant <strong>vendor lock-in risk</strong>: the entire analytical workflow — data access, processing, visualisation — depends on Google’s proprietary infrastructure. <span class="citation" data-cites="gorelick2017">Gorelick et al. (<a href="references.html#ref-gorelick2017" role="doc-biblioref">2017</a>)</span> present GEE as an open platform, but the server-side computation engine is not open-source, and Google retains the ability to modify pricing, API access, or data availability. If Google were to charge for GEE access (which has been discussed), research workflows built entirely on the platform would face immediate disruption. The emergence of alternatives — Microsoft’s Planetary Computer, the Open Data Cube framework, and cloud-optimised GeoTIFF access via STAC APIs — suggests that the field is aware of this risk and moving toward more distributed architectures.</p>
+<p>A practical limitation I encountered is that GEE excels at <strong>raster algebra and temporal reduction</strong> (turning petabytes into meaningful statistics) but is less suited to complex <strong>vector operations</strong> — spatial joins, network analysis, topological queries — that remain the domain of desktop GIS or spatial databases like PostGIS. For the kind of urban analysis that links EO-derived layers (NDVI, LST) to socio-economic data (deprivation indices, census demographics), the realistic workflow is to use GEE as a <strong>data reduction engine</strong> — producing clean, composited rasters at the city scale — and then exporting those products for integration with vector data in R, Python, or QGIS. This hybrid approach combines the scale advantages of cloud processing with the analytical flexibility of local tools, and seems like the most robust workflow for the kind of policy-relevant urban analytics this module is building toward.</p>
+<hr>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-amani2020" class="csl-entry" role="listitem">
+Amani, Meisam, Arsalan Ghorbanian, Seyed Ali Ahmadi, Mohammad Kakooei, Armin Moghimi, S. Mohammad Mirmazloumi, Sahel Mahdavi Moghaddam, et al. 2020. <span>“Google <span>Earth Engine</span> Cloud Computing Platform for Remote Sensing Big Data Applications: A Comprehensive Review.”</span> <em>IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing</em> 13: 5326–50.
+</div>
+<div id="ref-gorelick2017" class="csl-entry" role="listitem">
+Gorelick, Noel, Matt Hancher, Mike Dixon, Simon Ilyushchenko, David Thau, and Rebecca Moore. 2017. <span>“Google <span>Earth Engine</span>: Planetary-Scale Geospatial Analysis for Everyone.”</span> <em>Remote Sensing of Environment</em> 202: 18–27.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -622,8 +674,8 @@ Figure&nbsp;6.1: Figure 1: A 5-year NDVI time-series chart for Richmond Park, ge
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./week6.html" class="pagination-link" aria-label="Week 6: Machine Learning and Land Cover Classification">
-        <span class="nav-page-text"><span class="chapter-title">Week 6: Machine Learning and Land Cover Classification</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./week6.html" class="pagination-link" aria-label="Week 6: Classification I — Supervised Land Cover Mapping">
+        <span class="nav-page-text"><span class="chapter-title">Week 6: Classification I — Supervised Land Cover Mapping</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

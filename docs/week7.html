@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -30,6 +50,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./week8.html" rel="next">
 <link href="./week6.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -134,17 +155,28 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week5.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">week5</span></a>
+  <a href="./week5.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 5: Google Earth Engine I</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week6.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 6: Machine Learning and Land Cover Classification</span></a>
+  <a href="./week6.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 6: Classification I — Supervised Land Cover Mapping</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./week7.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Week 7: Advanced Classification</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week8.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 8: Synthetic Aperture Radar (SAR)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
   </div>
 </li>
     </ul>
@@ -159,7 +191,7 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary">Summary</a></li>
   <li><a href="#application" id="toc-application" class="nav-link" data-scroll-target="#application">Application</a></li>
-  <li><a href="#reflection-the-spatial-autocorrelation-pitfall" id="toc-reflection-the-spatial-autocorrelation-pitfall" class="nav-link" data-scroll-target="#reflection-the-spatial-autocorrelation-pitfall">Reflection: The Spatial Autocorrelation Pitfall</a></li>
+  <li><a href="#reflection" id="toc-reflection" class="nav-link" data-scroll-target="#reflection">Reflection</a></li>
   </ul>
 </nav>
     </div>
@@ -187,49 +219,74 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
-<p>This week’s lecture progressed from basic pixel-based Machine Learning to <strong>Object-Based Image Analysis (OBIA)</strong> and the critical evaluation of classification validity.</p>
-<p>The primary conceptual shift involved moving away from the assumption that every pixel is independent. Instead, we explored <strong>Simple Non-Iterative Clustering (SNIC)</strong>, which groups pixels into homogenous “superpixels” based on spectral similarity and spatial distance. Furthermore, we addressed <strong>Accuracy Assessment</strong>, learning that a map is only as good as its validation. We moved beyond simple percentages to use <strong>Confusion Matrices</strong>, evaluating <strong>Producer’s Accuracy</strong> (the probability that a ground feature is correctly classified) and <strong>User’s Accuracy</strong> (the reliability of the map for the end user).</p>
+<p>This week extended the classification framework from Week 6 in two directions: <strong>downward</strong> — into sub-pixel analysis where we acknowledge that a single pixel contains multiple land cover types — and <strong>upward</strong> — into Object-Based Image Analysis (OBIA) where we group pixels into meaningful spatial units before classifying. Both approaches address the same fundamental limitation of pixel-based classification: the assumption that each pixel is spectrally pure and spatially independent.</p>
+<p><strong>Sub-pixel (spectral unmixing)</strong> starts from the observation that at 30 m (Landsat) or even 10 m (Sentinel-2), most urban pixels contain a mixture of materials — a pixel might be 40% rooftop, 30% tree canopy, and 30% road. Linear spectral unmixing models each pixel’s reflectance as a weighted sum of “endmember” spectra representing pure land cover types, then solves for the fractional abundances. The practical demonstrated this in GEE using the <code>.unmix()</code> function with endmembers extracted from the image itself. The key constraint is that fractions should be <strong>non-negative and sum to one</strong> — without this, physically impossible results (negative land cover fractions) emerge. <span class="citation" data-cites="foody2004">Foody (<a href="references.html#ref-foody2004" role="doc-biblioref">2004</a>)</span> notes that the accuracy of unmixing depends critically on endmember selection: if the chosen endmembers do not represent the actual spectral variability in the scene, the estimated fractions will be biased. A practical challenge is accuracy assessment — the standard confusion matrix assumes discrete classes, so evaluating continuous fractional outputs requires either hardening the fractions (assigning each pixel to its dominant class, losing the sub-pixel information) or comparison against high-resolution reference imagery.</p>
+<p><strong>Object-Based Image Analysis (OBIA)</strong> moves in the opposite direction, aggregating pixels into spatially contiguous, spectrally homogeneous segments before classification. The practical used <strong>Simple Non-Iterative Clustering (SNIC)</strong>, which generates superpixels from a regular seed grid by iteratively assigning pixels to the nearest cluster based on a combined metric of spectral distance and spatial proximity. The <code>compactness</code> parameter controls the trade-off: higher values produce regular, compact superpixels (approaching a grid), while lower values allow segments to adapt to image boundaries such as road edges, rivers, and building footprints. Once segmented, each object is characterised by its <strong>mean spectral values</strong>, <strong>standard deviation</strong> (capturing internal heterogeneity), and derived indices (e.g., NDVI per object) — features that encode spatial context impossible to capture at the pixel level <span class="citation" data-cites="matarira2023">(<a href="references.html#ref-matarira2023" role="doc-biblioref">Matarira et al. 2023</a>)</span>. Classification then operates on these object-level features rather than individual pixels, which eliminates the “salt-and-pepper” noise that plagued the Week 6 output.</p>
+<p>The lecture also devoted significant time to <strong>accuracy assessment</strong>, and specifically to the pitfalls that inflate reported accuracy beyond what the model actually achieves. The standard framework — confusion matrix, overall accuracy (OA), producer’s accuracy (PA), and user’s/consumer’s accuracy (UA) — is well established but routinely misapplied. <span class="citation" data-cites="karasiak2022">Karasiak et al. (<a href="references.html#ref-karasiak2022" role="doc-biblioref">2022</a>)</span> demonstrated that when training and testing samples are drawn from spatially proximate locations (e.g., from the same polygon or adjacent pixels), <strong>spatial autocorrelation</strong> means the test data is not truly independent — it provides a “sneak preview” of the training signatures. Their experiments showed that conventional random splits can overestimate accuracy by 10–15 percentage points compared to spatially blocked cross-validation, where training and testing sets are separated by a minimum geographic distance. The lecture also addressed the <strong>Kappa coefficient debate</strong>: despite its widespread use as an agreement metric that accounts for chance, multiple authors have argued it should be abandoned because it is redundant with OA and its “expected agreement” baseline is often nonsensical in classification contexts.</p>
+<hr>
 </section>
 <section id="application" class="level2">
 <h2 class="anchored" data-anchor-id="application">Application</h2>
-<p>To refine the noisy results from Week 6, I implemented an OBIA approach for Greater London. I utilised the <strong>SNIC algorithm</strong> to segment Sentinel-2 imagery into objects. By adjusting the <code>compactness</code> and <code>seedGrid</code> parameters, I generated superpixels that adhered more closely to physical urban boundaries, such as the River Thames and large parklands.</p>
+<p>Building directly on Week 6’s pixel-based classification of Greater London, I implemented an <strong>OBIA workflow</strong> in GEE to address the spectral confusion and salt-and-pepper noise that degraded the earlier result.</p>
+<p>The workflow proceeded in three stages. First, I generated a <strong>SNIC segmentation</strong> of the Sentinel-2 median composite:</p>
+<p>```{js, eval=FALSE} // Generate seed grid and run SNIC segmentation var seeds = ee.Algorithms.Image.Segmentation.seedGrid(30, ‘hex’);</p>
+<p>var snic = ee.Algorithms.Image.Segmentation.SNIC({ image: composite, compactness: 1, connectivity: 8, neighborhoodSize: 60, seeds: seeds });</p>
+<p>// Compute per-object standard deviation as additional feature var clusters = snic.select(‘clusters’); var stdDev = composite.addBands(clusters) .reduceConnectedComponents(ee.Reducer.stdDev(), ‘clusters’, 100);</p>
+<p>// Compute per-object NDVI var NDVI = snic.normalizedDifference([‘SR_B5_median_mean’, ‘SR_B4_median_mean’]);</p>
+<p>// Combine mean spectral bands, std dev, and NDVI into classification input var objectImage = ee.Image.cat([ snic.select(meanBands), stdDev, NDVI]).float(); ```</p>
+<p>Second, I trained a <strong>Random Forest classifier</strong> on the object-level features using training polygons drawn over water, urban, vegetation, and bare earth classes. Third, I applied the classifier to produce the OBIA land cover map.</p>
 <div class="quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-initial" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-matrix" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-initial-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="fig-matrix-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/matrix.png" class="img-fluid figure-img">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-initial-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8.1: Validation Confusion Matrix and Overall Accuracy
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-matrix-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.1: Validation confusion matrix showing class-level producer’s and user’s accuracy. The model achieved an overall accuracy of 99.6%, though this figure should be interpreted cautiously given the spatial proximity of training and validation samples (see Reflection).
 </figcaption>
 </figure>
 </div>
 </div>
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-final" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-obia" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-final-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="fig-obia-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/8.png" class="img-fluid figure-img">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-final-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8.2: OBIA Land Cover Classification of Greater London
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-obia-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.2: OBIA land cover classification of Greater London. Compared to the pixel-based result in Week 6, the output is substantially cleaner — the Thames is correctly classified as water without shadow contamination, and urban-vegetation boundaries are more coherent.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
 </div>
-<p>As shown in @fig-matrix, the model achieved an <strong>Overall Accuracy of 99.6%</strong>. From a technical perspective, this indicates near-perfect alignment between the training data and the classified output. This high-fidelity discrete mapping is essential for urban policy applications, such as tracking <strong>Urban Sprawl</strong> or managing <strong>Greenbelt boundaries</strong>, where contiguous polygons are more useful for legal planning than fragmented pixels.</p>
+<p>The OBIA result (<a href="#fig-obia" class="quarto-xref">Figure&nbsp;<span>8.2</span></a>) is visually superior to the pixel-based classification from Week 6: the Thames is cleanly delineated, park boundaries are coherent, and the salt-and-pepper noise is eliminated. The confusion matrix (<a href="#fig-matrix" class="quarto-xref">Figure&nbsp;<span>8.1</span></a>) reports an <strong>overall accuracy of 99.6%</strong>, with near-perfect class-level metrics. However, this figure requires critical scrutiny — a point I return to in the Reflection.</p>
+<p>The improvement is attributable to two factors. First, the SNIC segmentation groups spectrally similar adjacent pixels, meaning that isolated shadow pixels in central London are absorbed into their surrounding urban objects rather than being classified independently. This is essentially a spatial regularisation that encodes the assumption that land cover is spatially continuous — an assumption that holds in most urban contexts. Second, the object-level features — particularly the <strong>within-object standard deviation</strong> — provide information about internal heterogeneity that pixel-level band values cannot capture. <span class="citation" data-cites="matarira2023">Matarira et al. (<a href="references.html#ref-matarira2023" role="doc-biblioref">2023</a>)</span> demonstrated this advantage for informal settlement mapping in Dar es Salaam, finding that OBIA using SNIC superpixels with combined Sentinel-1 (SAR) and Sentinel-2 (optical) features outperformed pixel-based RF by approximately 8 percentage points in overall accuracy. Their finding that texture heterogeneity within objects was the most discriminative feature for separating formal from informal settlements resonates with my London results, where within-object standard deviation helped distinguish spectrally similar but texturally different urban classes.</p>
+<hr>
 </section>
-<section id="reflection-the-spatial-autocorrelation-pitfall" class="level2">
-<h2 class="anchored" data-anchor-id="reflection-the-spatial-autocorrelation-pitfall">Reflection: The Spatial Autocorrelation Pitfall</h2>
-<p>The most striking lesson from this week was the warning against the <strong>“Illusion of Accuracy.”</strong> While a 0.99 OA (Overall Accuracy) appears excellent, it often signals a failure to account for <strong>Spatial Autocorrelation (Tobler’s First Law)</strong>.</p>
-<p>In my practical, the validation points were extracted from the same buffered polygons used for training. Because “near things are more related than distant things,” the testing data likely provided a <strong>“sneak preview”</strong> of the training signatures, leading to artificially inflated accuracy. As Karasiak et al.&nbsp;(2022) argued, this is a common pitfall in remote sensing.</p>
-<p>Furthermore, I engaged with the academic debate regarding the <strong>Kappa Coefficient</strong>. Despite being a standard metric, the lecture highlighted calls to abandon it because its results are often redundant or misinterpreted. This week taught me that as a spatial analyst, my role is to critically interrogate the <em>statistical independence</em> of my validation sets rather than simply chasing a perfect score.</p>
+<section id="reflection" class="level2">
+<h2 class="anchored" data-anchor-id="reflection">Reflection</h2>
+<p>The headline finding from this week — 99.6% overall accuracy — is precisely the kind of result that should trigger <strong>scepticism rather than celebration</strong>. As <span class="citation" data-cites="karasiak2022">Karasiak et al. (<a href="references.html#ref-karasiak2022" role="doc-biblioref">2022</a>)</span> demonstrate, spatial dependence between training and test sets is the most common and most consequential pitfall in remote sensing accuracy assessment. In my practical, validation points were extracted from the same buffered polygons used for training. Because neighbouring pixels share atmospheric conditions, illumination geometry, and land cover characteristics (Tobler’s First Law), the testing data was statistically correlated with the training data — meaning the accuracy estimate reflects the model’s ability to interpolate within known regions rather than generalise to unseen areas.</p>
+<p>A more rigorous approach would implement <strong>spatial cross-validation</strong> — for example, dividing the study area into spatially disjoint blocks and ensuring that no block contributes pixels to both training and testing sets. <span class="citation" data-cites="karasiak2022">Karasiak et al. (<a href="references.html#ref-karasiak2022" role="doc-biblioref">2022</a>)</span> showed that this typically reduces reported accuracy by 10–15 percentage points, which would bring my result closer to a realistic 85–90% — still respectable, but a fundamentally different claim than 99.6%. This distinction matters for policy applications: if the GLA were to use an OBIA classification to monitor Policy G5 (Urban Greening Factor) compliance, a model that actually achieves 85% accuracy would produce measurably different greening estimates than one assumed to achieve 99%.</p>
+<p>The <strong>Kappa coefficient debate</strong> is also instructive. Kappa attempts to quantify agreement beyond chance by comparing observed accuracy to the accuracy expected if the classifier assigned classes randomly in proportion to their marginal frequencies. However, as the lecture noted, this “expected agreement” baseline is arbitrary — there is no reason to assume that a random proportional classifier is the correct null model. In practice, Kappa values are almost always lower than OA but highly correlated with it, adding no independent information. The emerging consensus in the literature is to report the full confusion matrix with PA and UA per class, supplemented by the F1 score for imbalanced datasets, rather than relying on any single summary metric.</p>
+<p>Looking forward, the progression across Weeks 6 and 7 — from pixel-based RF to OBIA with SNIC — has demonstrated that <strong>classification is not primarily a machine learning problem but a feature engineering and validation design problem</strong>. The RF algorithm was identical in both weeks; what changed was the input representation (pixels vs.&nbsp;objects with derived features) and, implicitly, the spatial logic embedded in the workflow. For my own future work, the key takeaway is that time spent on thoughtful segmentation, feature construction, and rigorous validation design will yield larger accuracy improvements than experimenting with more complex classifiers.</p>
+<hr>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-foody2004" class="csl-entry" role="listitem">
+Foody, Giles M. 2004. <span>“Sub-Pixel Methods in Remote Sensing.”</span> In <em>Remote Sensing Image Analysis: Including the Spatial Domain</em>, edited by Steven M. de Jong and Freek D. van der Meer, 37–49. Dordrecht: Springer.
+</div>
+<div id="ref-karasiak2022" class="csl-entry" role="listitem">
+Karasiak, Nicolas, Jean-François Dejoux, Claude Monteil, and David Sheeren. 2022. <span>“Spatial Dependence Between Training and Test Sets: Another Pitfall of Classification Accuracy Assessment in Remote Sensing.”</span> <em>Machine Learning</em> 111: 2715–40.
+</div>
+<div id="ref-matarira2023" class="csl-entry" role="listitem">
+Matarira, Dadirai, Onisimo Mutanga, Maheshvari Naidu, and Marco Vizzari. 2023. <span>“Object-Based Informal Settlement Mapping in <span>Google Earth Engine</span> Using the Integration of <span>Sentinel-1</span>, <span>Sentinel-2</span>, and <span>PlanetScope</span> Satellite Data.”</span> <em>Land</em> 12 (1): 99.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -634,11 +691,14 @@ Figure&nbsp;8.2: OBIA Land Cover Classification of Greater London
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./week6.html" class="pagination-link" aria-label="Week 6: Machine Learning and Land Cover Classification">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Week 6: Machine Learning and Land Cover Classification</span></span>
+      <a href="./week6.html" class="pagination-link" aria-label="Week 6: Classification I — Supervised Land Cover Mapping">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Week 6: Classification I — Supervised Land Cover Mapping</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./week8.html" class="pagination-link" aria-label="Week 8: Synthetic Aperture Radar (SAR)">
+        <span class="nav-page-text"><span class="chapter-title">Week 8: Synthetic Aperture Radar (SAR)</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

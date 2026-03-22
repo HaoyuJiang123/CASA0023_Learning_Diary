@@ -20,7 +20,62 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -135,17 +190,28 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week5.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">week5</span></a>
+  <a href="./week5.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 5: Google Earth Engine I</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week6.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 6: Machine Learning and Land Cover Classification</span></a>
+  <a href="./week6.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 6: Classification I — Supervised Land Cover Mapping</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./week7.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 7: Advanced Classification</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week8.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 8: Synthetic Aperture Radar (SAR)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
   </div>
 </li>
     </ul>
@@ -158,7 +224,9 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#week-1-learning-diary" id="toc-week-1-learning-diary" class="nav-link active" data-scroll-target="#week-1-learning-diary">Week 1 Learning Diary</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#application" id="toc-application" class="nav-link" data-scroll-target="#application">Application</a></li>
+  <li><a href="#reflection" id="toc-reflection" class="nav-link" data-scroll-target="#reflection">Reflection</a></li>
   </ul>
 </nav>
     </div>
@@ -184,21 +252,125 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="week-1-learning-diary" class="level2">
-<h2 class="anchored" data-anchor-id="week-1-learning-diary">Week 1 Learning Diary</h2>
-<p><strong>Summary</strong> We kicked off the module by looking at the fundamentals of remote sensing . We learned the core difference between passive sensors (like optical cameras capturing reflected sunlight) and active sensors (like SAR, which fires its own energy and can pierce right through clouds) . A massive chunk of the lecture covered the four key resolutions we have to juggle when picking data: spatial, spectral, temporal, and radiometric . In the practical, things got real quickly! We loaded Landsat and Sentinel-2 data into SNAP and R (using the <code>terra</code> package) to extract spectral signatures for different land covers . We even generated a Tasseled Cap transformation to look at urban ‘brightness’ and ‘greenness’. My main independent thought here is just how much of a balancing act remote sensing is—you almost never get perfect spatial detail <em>and</em> high temporal revisit times in one free dataset, so choosing the right sensor for a specific urban problem is half the battle .</p>
-<p><strong>Applications</strong></p>
-<p>When looking at how these concepts are used in the real world, the trade-off between spatial and spectral resolution becomes super obvious. I looked at a 2018 study by Kibria et al.&nbsp;that used Object-Based Image Analysis (OBIA) to extract green infrastructure in the highly dense city of Dhaka. They compared Sentinel-2 and Landsat-8 and found that Sentinel-2’s 10m spatial resolution completely outperformed Landsat’s 30m resolution for spotting tiny, fragmented street trees and small parks. With Landsat, they ran into a massive ‘mixed pixel’ problem where concrete and canopy blur together in a single grid, underestimating the green cover. If the policy goal is mapping exactly <em>where</em> the greenery is, Sentinel-2 wins hands down.</p>
-<p>However, spectral resolution matters just as much depending on the urban challenge. Another paper by Wang et al.&nbsp;(2024) used Landsat to measure how much these green covers actually cool down the Urban Heat Island (UHI) effect in Nanjing. While Sentinel-2 is great for high-res mapping, it completely lacks thermal infrared bands. Landsat, with its thermal sensors, can actually retrieve Land Surface Temperature (LST) to quantify the cooling effect. Comparing these two studies shows me that there’s no silver bullet in Earth Observation. A city trying to adapt to extreme heat needs the high-resolution spatial mapping of Sentinel-2 <em>combined</em> with the thermal spectral data of Landsat to make smart, localized climate policies.</p>
-<p><strong>Reflection</strong> Reflecting on this week, what really blew my mind was connecting abstract physics to tangible urban data. Learning about how Rayleigh scattering makes the sky blue (or sunsets red) was a cool ‘aha!’ moment that made the science feel very real . Honestly, getting my hands dirty with SNAP and R during the practical was both daunting and exciting. Dealing with different spatial resolutions, resampling bands, and seeing how messy raw Earth Observation data can be was an eye-opener. Yet, seeing how R packages like <code>terra</code> can efficiently pull spectral values across thousands of pixels makes me realize how powerful this skill set is. In the future, I can totally see myself using these exact workflows to overlay Tasseled Cap indices with socioeconomic data, perhaps exploring whether lower-income neighborhoods disproportionately lack access to cooling green spaces. It’s not just about learning software; it’s about unlocking a new scale of evidence for fairer urban planning.</p>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>This week introduced the physical principles that underpin all remotely sensed data. Remote sensing is fundamentally the measurement of electromagnetic radiation (EMR) that has interacted with the Earth’s surface — either passively (detecting reflected solar energy or emitted thermal energy) or actively (transmitting a signal and measuring its return, as in Synthetic Aperture Radar). The distinction matters operationally: passive optical sensors like Sentinel-2’s Multi-Spectral Instrument (MSI) are constrained by solar illumination and cloud cover, while active sensors like Sentinel-1’s C-band SAR can acquire data at night and through cloud — a critical advantage in persistently cloudy regions like the UK <span class="citation" data-cites="tempfli2009">(<a href="references.html#ref-tempfli2009" role="doc-biblioref">Tempfli et al. 2009</a>)</span>.</p>
+<p>EMR does not travel unaltered from the sun to the sensor. As it passes through the atmosphere, it undergoes <strong>scattering</strong> (redirection by particles), <strong>absorption</strong> (conversion to heat by atmospheric gases), and <strong>transmission</strong>. The type of scattering depends on the ratio of particle size to wavelength: <strong>Rayleigh scattering</strong> (particles much smaller than the wavelength) preferentially affects shorter wavelengths, which is why the sky appears blue — blue light (~450 nm) scatters roughly 5.5 times more than red light (~700 nm) <span class="citation" data-cites="jensen2015">(<a href="references.html#ref-jensen2015" role="doc-biblioref">Jensen 2015</a>)</span>. At the surface, incident radiation is partitioned into reflected, absorbed, and transmitted components, with the proportions varying by material and wavelength — this wavelength-dependent reflectance is what produces the <strong>spectral signature</strong> that allows different surface types to be distinguished.</p>
+<p>Remotely sensed data is characterised by four resolutions, each involving trade-offs. <strong>Spatial resolution</strong> (pixel size) determines the smallest feature detectable — Sentinel-2 provides 10 m in VNIR bands but only 20 m in SWIR and 60 m in atmospheric bands. <strong>Spectral resolution</strong> describes the number and width of wavelength bands recorded: Sentinel-2’s 13 bands span from coastal aerosol (443 nm) to SWIR (2190 nm), including three red-edge bands (B5, B6, B7) specifically designed to capture the steep reflectance increase at the vegetation red-edge (~700–750 nm). <strong>Temporal resolution</strong> is the revisit period — 5 days for the Sentinel-2A/2B constellation. <strong>Radiometric resolution</strong> determines the sensor’s sensitivity to differences in reflected energy: Sentinel-2’s 12-bit quantisation provides 4096 discrete brightness levels per band, compared to Landsat 5 TM’s 8-bit (256 levels), enabling finer discrimination of subtle spectral differences <span class="citation" data-cites="phiri2020">(<a href="references.html#ref-phiri2020" role="doc-biblioref">Phiri et al. 2020</a>)</span>.</p>
 <hr>
-<p><strong>References:</strong></p>
-<ul>
-<li><p>Kibria, M. G., et al.&nbsp;(2018). <em>The potentials of Sentinel-2 and LandSat-8 data in green infrastructure extraction, using object based image analysis (OBIA) method</em>.</p></li>
-<li><p>Wang, Y., et al.&nbsp;(2024). <em>Measuring the cooling effects of green cover on urban heat island effects using Landsat satellite imagery</em>.</p></li>
-</ul>
+</section>
+<section id="application" class="level2">
+<h2 class="anchored" data-anchor-id="application">Application</h2>
+<p>In the practical, I worked with a Sentinel-2 L2A (Bottom of Atmosphere) scene of London acquired on 2 May 2025 using the SNAP toolbox and R. L2A products have already undergone atmospheric correction via the Sen2Cor processor, converting top-of-atmosphere radiance to surface reflectance — removing the atmospheric scattering and absorption effects discussed above. The first step was generating a <strong>true colour composite</strong> by mapping B4 (Red), B3 (Green), and B2 (Blue) to the RGB colour channels:</p>
+<div id="fig-truecolour" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-truecolour-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/2.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-truecolour-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.1: True colour composite of London generated in SNAP using Sentinel-2 L2A B4/B3/B2. The Thames, Hyde Park, and the dense urban fabric of central London are clearly resolved at 10 m spatial resolution. The image demonstrates the high radiometric quality of L2A surface reflectance data — contrast between vegetated parks and built surfaces is immediately apparent without any manual histogram stretching.
+</figcaption>
+</figure>
+</div>
+<p>I then computed a <strong>Tasseled Cap Transformation (TCT)</strong>, originally developed by <span class="citation" data-cites="kauth1976">Kauth and Thomas (<a href="references.html#ref-kauth1976" role="doc-biblioref">1976</a>)</span> for Landsat MSS data to compress multispectral information into physically interpretable components. The transformation applies sensor-specific coefficients to produce three orthogonal axes: <strong>Brightness</strong> (aligned with high-albedo surfaces — bare soil, concrete, rooftops), <strong>Greenness</strong> (aligned with photosynthetically active vegetation), and <strong>Wetness</strong> (aligned with moisture content in soil, vegetation, and water bodies). Before computing TCT, all bands had to be resampled to a uniform 20 m resolution using SNAP’s Resampling tool, because the required input bands span two native resolutions (B2, B3, B4, B8 at 10 m; B11, B12 at 20 m). The Brightness component, for example, was calculated as:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tasseled Cap Brightness formula applied via SNAP Band Maths</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Coefficients are sensor-specific — these are for Sentinel-2 MSI</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>Brightness <span class="ot">=</span> (<span class="fl">0.3037</span> <span class="sc">*</span> B2) <span class="sc">+</span> (<span class="fl">0.2793</span> <span class="sc">*</span> B3) <span class="sc">+</span> (<span class="fl">0.4743</span> <span class="sc">*</span> B4) <span class="sc">+</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>             (<span class="fl">0.5585</span> <span class="sc">*</span> B8) <span class="sc">+</span> (<span class="fl">0.5082</span> <span class="sc">*</span> B11) <span class="sc">+</span> (<span class="fl">0.1863</span> <span class="sc">*</span> B12)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>The three components were displayed as an RGB composite (R: Brightness, G: Greenness, B: Wetness):</p>
+<div id="fig-tct" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-tct-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tct-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.2: Tasseled Cap Transformation RGB composite. The Thames appears bright blue (high Wetness, low Brightness and Greenness), urban areas are purple/magenta (high Brightness dominating over Greenness), and parks display as yellow-green patches (high Greenness). This visualisation compresses six spectral bands into three physically meaningful dimensions — a form of guided dimensionality reduction that, unlike PCA, produces components with consistent, interpretable physical meanings across scenes.
+</figcaption>
+</figure>
+</div>
+<p>To quantitatively compare spectral characteristics across land cover types, I created vector polygons in SNAP for four categories — <strong>urban</strong>, <strong>grass</strong>, <strong>forest</strong>, and <strong>bare earth</strong> — exported them as shapefiles alongside the resampled imagery (GeoTIFF), and performed the analysis in R using the <code>terra</code> package. The extraction function below abstracts the workflow of pulling pixel values from a raster stack for a given polygon and reshaping them into tidy format:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to extract pixel values per land cover polygon and reshape for ggplot</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>band_fun <span class="ot">&lt;-</span> <span class="cf">function</span>(sensor, landcover) {</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  col_sensor <span class="ot">&lt;-</span> <span class="fu">deparse</span>(<span class="fu">substitute</span>(sensor))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  col_land <span class="ot">&lt;-</span> <span class="fu">deparse</span>(<span class="fu">substitute</span>(landcover))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  terra<span class="sc">::</span><span class="fu">extract</span>(sensor, landcover, <span class="at">progress =</span> F) <span class="sc">%&gt;%</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(.),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">names_to =</span> <span class="st">"bands"</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">values_to =</span> <span class="st">"band_values"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_column</span>(<span class="at">sensor =</span> col_sensor) <span class="sc">%&gt;%</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_column</span>(<span class="at">land =</span> col_land)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-spectral" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-spectral-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/spectral_line_plot.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-spectral-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.3: Spectral reflectance profiles (mean ± 1 SD) for four land cover types. Vegetation classes (grass and forest) show the characteristic “red-edge” — low reflectance in visible bands (absorption by chlorophyll) followed by a sharp increase in NIR bands (strong scattering by mesophyll cell structure). Urban surfaces exhibit a relatively flat, low-amplitude profile across all bands, consistent with the spectrally mixed nature of built-up pixels at 20 m resolution.
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-density" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-density-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/spectral_density_plot.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-density-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.4: Spectral density plot showing the distribution of all pixel reflectance values pooled across bands. Urban pixels cluster tightly at lower values with a narrow distribution, while vegetation and bare earth exhibit broader, higher-value distributions driven by their strong NIR response. The dashed vertical lines indicate overall mean reflectance per class.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>The spectral profiles in <a href="#fig-spectral" class="quarto-xref">Figure&nbsp;<span>2.3</span></a> reveal patterns consistent with the physical principles discussed in the lecture. The vegetation red-edge — the steep reflectance increase between B4 (Red, ~665 nm) and B8 (NIR, ~842 nm) — is driven by the contrast between strong chlorophyll absorption in the red and strong scattering by the spongy mesophyll layer in the NIR <span class="citation" data-cites="jensen2015">(<a href="references.html#ref-jensen2015" role="doc-biblioref">Jensen 2015</a>)</span>. Bare earth shows the highest reflectance in visible bands (B2–B4), which is expected for exposed mineral surfaces with no vegetative cover to absorb red light. Urban pixels, despite representing built surfaces, show surprisingly moderate reflectance with high variance — likely because the 20 m pixel size captures sub-pixel mixtures of rooftops, roads, vegetation, and shadow, creating a <strong>mixed pixel</strong> problem that is well-documented in the urban remote sensing literature <span class="citation" data-cites="phiri2020">(<a href="references.html#ref-phiri2020" role="doc-biblioref">Phiri et al. 2020</a>)</span>.</p>
+<p>These spectral extraction techniques have direct practical applications. <span class="citation" data-cites="labib2018">Labib and Harris (<a href="references.html#ref-labib2018" role="doc-biblioref">2018</a>)</span> evaluated Sentinel-2 and Landsat-8 for mapping urban green infrastructure using Object-Based Image Analysis (OBIA) in Dhaka, finding that Sentinel-2’s finer 10 m resolution achieved higher accuracy (71.24%) than Landsat-8 at extracting fragmented green patches in dense urban fabrics — precisely the kind of resolution advantage visible when comparing my 10 m true colour composite (<a href="#fig-truecolour" class="quarto-xref">Figure&nbsp;<span>2.1</span></a>) to the 20 m resampled TCT output (<a href="#fig-tct" class="quarto-xref">Figure&nbsp;<span>2.2</span></a>). <span class="citation" data-cites="ni2024">Ni, Liu, and Wang (<a href="references.html#ref-ni2024" role="doc-biblioref">2024</a>)</span> extended this further by using Landsat-derived spectral indices (NDVI) to quantify the cooling effects of urban green spaces on the Urban Heat Island (UHI) effect in Nagoya, demonstrating that UGS exerts a measurable cooling influence up to 300 m from its edge, with the strongest effect within 200 m. Their work shows how the TCT components we computed — particularly Greenness and Brightness — are not merely visualisation tools but inputs to quantitative environmental models that directly inform nature-based urban climate mitigation strategies aligned with <strong>SDG 11</strong> (Sustainable Cities and Communities).</p>
+<hr>
+</section>
+<section id="reflection" class="level2">
+<h2 class="anchored" data-anchor-id="reflection">Reflection</h2>
+<p>The most significant conceptual shift this week was recognising that remotely sensed data is not simply “imagery” but a structured measurement of physical interactions between electromagnetic radiation and matter. Every pixel value in our Sentinel-2 scene encodes information about the surface’s reflectance properties at a specific wavelength, after atmospheric correction has (imperfectly) removed the confounding effects of scattering and absorption. This framing transforms the data from something visual into something quantitative and analytically tractable — the spectral profiles in <a href="#fig-spectral" class="quarto-xref">Figure&nbsp;<span>2.3</span></a> are not aesthetic choices but measurements of physical properties.</p>
+<p>The practical highlighted the complementary strengths of different tools. SNAP excels at interactive exploration — visually comparing band combinations, adjusting contrast stretches, drawing ROI polygons — but becomes cumbersome for reproducible quantitative analysis. R’s <code>terra</code> package, by contrast, enables scripted, repeatable extraction and statistical comparison of spectral values across land cover types, but lacks SNAP’s visual immediacy for image interpretation. The most effective workflow combined both: SNAP for preprocessing (resampling, band maths, polygon creation, export) and R for analysis and visualisation.</p>
+<p>One limitation I noticed is the <strong>subjectivity of training polygon placement</strong>. My “forest” polygon likely included a mix of canopy and undergrowth, and my “urban” polygon certainly contained sub-pixel vegetation — which explains the high variance in the urban spectral profile. This foreshadows a fundamental challenge in supervised classification that the module will address later: the quality of any derived product is bounded by the quality of the reference data, not the sophistication of the algorithm. Going forward, I am curious to explore how Google Earth Engine might streamline these preprocessing workflows by operating on cloud-hosted data collections without the need for local downloads, and how the spectral analysis skills from this week will underpin the classification methods introduced in later weeks.</p>
+<hr>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-jensen2015" class="csl-entry" role="listitem">
+Jensen, John R. 2015. <em>Introductory Digital Image Processing: A Remote Sensing Perspective</em>. 4th ed. Prentice Hall.
+</div>
+<div id="ref-kauth1976" class="csl-entry" role="listitem">
+Kauth, R. J., and G. S. Thomas. 1976. <span>“The Tasselled Cap – a Graphic Description of the Spectral-Temporal Development of Agricultural Crops as Seen by <span>LANDSAT</span>.”</span> In <em>Proceedings of the Symposium on Machine Processing of Remotely Sensed Data</em>, 4B-41-4B-51. West Lafayette, Indiana: Purdue University.
+</div>
+<div id="ref-labib2018" class="csl-entry" role="listitem">
+Labib, S. M., and Angela Harris. 2018. <span>“The Potentials of <span>Sentinel-2</span> and <span>LandSat-8</span> Data in Green Infrastructure Extraction, Using Object Based Image Analysis (<span>OBIA</span>) Method.”</span> <em>European Journal of Remote Sensing</em> 51 (1): 231–40. <a href="https://doi.org/10.1080/22797254.2017.1419441">https://doi.org/10.1080/22797254.2017.1419441</a>.
+</div>
+<div id="ref-ni2024" class="csl-entry" role="listitem">
+Ni, Xuhui, Yanqing Liu, and Haobin Wang. 2024. <span>“Measuring the Cooling Effects of Green Cover on Urban Heat Island Effects Using <span>Landsat</span> Satellite Imagery.”</span> <em>International Journal of Digital Earth</em> 17 (1): 2358867. <a href="https://doi.org/10.1080/17538947.2024.2358867">https://doi.org/10.1080/17538947.2024.2358867</a>.
+</div>
+<div id="ref-phiri2020" class="csl-entry" role="listitem">
+Phiri, Darius, Matamyo Simwanda, Serajis Salekin, Vincent R. Nyirenda, Yuji Murayama, and Manjula Ranagalage. 2020. <span>“Sentinel-2 Data for Land Cover/Use Mapping: A Review.”</span> <em>Remote Sensing</em> 12 (14): 2291. <a href="https://doi.org/10.3390/rs12142291">https://doi.org/10.3390/rs12142291</a>.
+</div>
+<div id="ref-tempfli2009" class="csl-entry" role="listitem">
+Tempfli, K., G. C. Huurneman, W. H. Bakker, L. L. F. Janssen, W. J. Feringa, A. S. M. Gieske, K. A. Grabmaier, et al. 2009. <em>Principles of Remote Sensing: An Introductory Textbook</em>. Enschede, The Netherlands: International Institute for Geo-Information Science; Earth Observation (<span>ITC</span>).
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
