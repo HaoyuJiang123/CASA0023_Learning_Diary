@@ -204,7 +204,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week2.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">week2</span></a>
+  <a href="./week2.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 2: Portfolio Tools &amp; Sentinel-2 Sensor</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -283,120 +283,110 @@ window.Quarto = {
 
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
-<p>This week’s lecture opened with a useful framing: nearly all Earth observation data now comes as <strong>Analysis Ready Data (ARD)</strong>, meaning the corrections covered this week have largely been automated in operational pipelines. The reason to understand them anyway is that loading a Landsat image in Google Earth Engine still requires choosing between Level-1 DN, Level-2 surface reflectance, and Level-3 science products — and that choice has real consequences for what the values in your raster actually mean. The lecturer’s point that some researchers make this choice without understanding it was a sharp reminder that familiarity with a tool is not the same as understanding the data it produces.</p>
-<p>The corrections follow a fixed order: <strong>geometric → atmospheric → orthorectification</strong>. Geometric correction aligns an image to a known coordinate reference system by identifying Ground Control Points (GCPs) at stable features — roads, boundaries, buildings — fitting a regression between their positions in the distorted image and a reference dataset, and warping the image accordingly. The reason <strong>backward mapping</strong> is preferred over forward mapping is worth noting: forward mapping can produce predicted positions that fall between grid cells, creating output pixels with no assignable value, whereas backward mapping guarantees a value for every output pixel. After warping, resampling — nearest neighbour, bilinear, or cubic convolution — snaps the transformed grid back to integer positions.</p>
-<p>Atmospheric correction addresses the contamination introduced by <strong>path radiance</strong> (EMR scattered into the sensor before touching the surface) and the <strong>adjacency effect</strong> (radiance bleeding from neighbouring pixels). Dark Object Subtraction (DOS) is the simplest relative approach: identify the darkest pixel in each band, assume it represents a surface with near-zero true reflectance, and subtract its value from all other pixels. The underlying logic — that any signal from a truly black surface must be atmospheric — is reasonable but approximate, which is why DOS is considered a lower bound rather than a rigorous correction <span class="citation" data-cites="jensen2015">(<a href="references.html#ref-jensen2015" role="doc-biblioref">Jensen 2015</a>)</span>. The more sophisticated COST variant incorporates the cosine of the solar zenith angle (<span class="math inline">\(\tau_z\)</span>), while Pseudo-Invariant Features (PIFs) offer a more principled relative method, using regression across stable surfaces to normalise multiple images to a single reference date.</p>
-<p>DN is a dimensionless, sensor-specific integer with no physical meaning beyond efficient storage. Radiance, obtained via <span class="math inline">\(L_\lambda = Bias + Gain \times DN\)</span> using lab-calibrated coefficients, gives the quantity in meaningful units (W·m⁻²·sr⁻¹·μm⁻¹). Surface reflectance then removes the effects of both illumination conditions and the atmosphere, leaving a value that is a property of the surface itself — and therefore <strong>comparable across acquisitions</strong>. TOA reflectance occupies an intermediate position: illumination effects removed, but atmosphere still present. Some papers use TOA on the grounds that scenes were clear enough that residual atmospheric effects were negligible — a judgement call that should at minimum be stated explicitly.</p>
+<p>This week unpacked what happens between a satellite recording raw electromagnetic energy and a researcher loading “ready-to-use” surface reflectance — a pipeline that most users never see but that fundamentally determines what their pixel values mean. The lecture framed this around a deceptively simple question: <strong>when you load a Landsat image, what are you actually looking at?</strong> The answer depends entirely on which product level you chose, and the differences are not cosmetic.</p>
+<p>The starting point is the <strong>Digital Number (DN)</strong> — a dimensionless integer that encodes the detector’s response to incoming radiance, scaled and quantised for efficient storage and transmission. DN has no physical meaning: the same surface feature will produce different DN values depending on the sensor’s gain settings, the Sun-Earth distance on the acquisition date, and the solar elevation angle. Converting DN to <strong>spectral radiance</strong> (<span class="math inline">\(L_\lambda = Gain \times DN + Bias\)</span>, with coefficients from the metadata) gives a physically meaningful quantity — the power per unit area per steradian per wavelength reaching the sensor. But radiance still conflates the surface signal with atmospheric contamination and illumination geometry. The next step, <strong>Top of Atmosphere (TOA) reflectance</strong>, normalises for solar irradiance and Sun-Earth distance, removing illumination effects but leaving the atmosphere in place. Only <strong>surface reflectance (BOA)</strong> — obtained by modelling and removing atmospheric absorption and scattering — gives a value that is a property of the surface itself, comparable across dates, sensors, and locations.</p>
+<p><strong>Atmospheric correction</strong> is where most of the analytical complexity lies. The atmosphere contaminates the signal in two principal ways: <strong>path radiance</strong> (sunlight scattered by atmospheric particles into the sensor’s field of view without ever touching the surface) and <strong>atmospheric absorption</strong> (selective removal of energy at wavelengths where gases like water vapour and ozone absorb strongly). <strong>Dark Object Subtraction (DOS)</strong> is the simplest correction: find the darkest pixel per band (assumed to be a near-zero-reflectance surface like deep shadow or clear water), attribute its value entirely to path radiance, and subtract it from all pixels. The COST variant improves on this by incorporating the cosine of the solar zenith angle to account for the optical path length through the atmosphere. Both are <strong>relative</strong> methods — they adjust internal consistency within a scene but don’t produce physically rigorous surface reflectance. <strong>Absolute</strong> methods like 6S or MODTRAN use radiative transfer models parameterised with atmospheric profile data (aerosol optical depth, water vapour column) to simulate atmospheric effects and invert them — this is what Landsat Collection 2 Level-2 products use, and it is substantially more accurate than DOS, though still model-dependent <span class="citation" data-cites="jensen2015">(<a href="references.html#ref-jensen2015" role="doc-biblioref">Jensen 2015</a>)</span>.</p>
+<p><strong>Geometric correction</strong> was covered more briefly but contains an important conceptual point. Ground Control Points (GCPs) establish the relationship between pixel coordinates in the distorted image and real-world coordinates from a reference dataset. The regression model fitted to these points (first-order polynomial for simple shift/rotation, higher-order for more complex distortions) is then used to warp the image. <strong>Backward mapping</strong> — computing, for each output pixel, where in the input image its value comes from — is preferred over forward mapping because it guarantees every output pixel receives a value, whereas forward mapping can leave gaps. After transformation, <strong>resampling</strong> (nearest neighbour, bilinear, or cubic convolution) assigns values to the new regular grid, each method representing a different trade-off between computational speed and spatial fidelity.</p>
 <hr>
 </section>
 <section id="application" class="level2">
 <h2 class="anchored" data-anchor-id="application">Application</h2>
-<p>The practical used <strong>Landsat 8 and 9 imagery over Cape Town</strong>, which requires at least two tiles to cover the metropolitan area — a direct consequence of Landsat’s Worldwide Reference System (WRS-2) grid not aligning with administrative boundaries. The tiles were loaded and mosaicked using <code>terra::mosaic()</code>:</p>
+<p>For this week’s practical, I applied the correction and enhancement workflow to <strong>Landsat 8 imagery over London</strong> (Path 201, Row 024, acquired August 2024). Unlike Cape Town (the practical’s default city), London is covered by a single Landsat tile, so mosaicking was not required — but the single-tile workflow still involves the full processing chain from scaled integers to meaningful surface reflectance.</p>
+<p>The first step after loading the seven SR bands was <strong>rescaling</strong>. Landsat Collection 2 Level-2 surface reflectance is stored as scaled integers (multiplied by a scale factor of 0.0000275 with an offset of −0.2) for storage efficiency. Forgetting this step — which I initially did — produces nonsensical derived products: my first NDVI attempt yielded values ranging from −5000 to +1000, because the ratio was computed on raw integers where the additive offset had not been applied. This is exactly the kind of silent error the lecture warned about — the code runs without complaint, but the output is physically meaningless.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fs)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>listlandsat_8 <span class="ot">&lt;-</span> <span class="fu">dir_info</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"prac_3"</span>, <span class="st">"Landsat"</span>, <span class="st">"Lsat8"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="fu">str_detect</span>(path, <span class="st">"[B123456790].TIF"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(path) <span class="sc">%&gt;%</span> <span class="fu">pull</span>() <span class="sc">%&gt;%</span> <span class="fu">as.character</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  terra<span class="sc">::</span><span class="fu">rast</span>()</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>listlandsat_9 <span class="ot">&lt;-</span> <span class="fu">dir_info</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"prac_3"</span>, <span class="st">"Landsat"</span>, <span class="st">"Lsat9"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="fu">str_detect</span>(path, <span class="st">"[1B23456790].TIF"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(path) <span class="sc">%&gt;%</span> <span class="fu">pull</span>() <span class="sc">%&gt;%</span> <span class="fu">as.character</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  terra<span class="sc">::</span><span class="fu">rast</span>()</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">mosaic</span>(listlandsat_8, listlandsat_9, <span class="at">fun=</span><span class="st">"mean"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load and crop to central London</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>landsat_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"/Users/LandsatLondon"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> <span class="st">"SR_B[1-7].TIF$"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  terra<span class="sc">::</span><span class="fu">rast</span>()</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>london_clip <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">crop</span>(landsat_files, <span class="fu">ext</span>(<span class="dv">500000</span>, <span class="dv">530000</span>, <span class="dv">5700000</span>, <span class="dv">5720000</span>))</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># CRITICAL: apply scale factors before any computation</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>london_scaled <span class="ot">&lt;-</span> (london_clip <span class="sc">*</span> <span class="fl">0.0000275</span>) <span class="sc">+</span> (<span class="sc">-</span><span class="fl">0.2</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter invalid values before NDVI</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>b4 <span class="ot">&lt;-</span> london_scaled[[<span class="dv">4</span>]]; b5 <span class="ot">&lt;-</span> london_scaled[[<span class="dv">5</span>]]</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>b4[b4 <span class="sc">&lt;=</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span>; b5[b5 <span class="sc">&lt;=</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>ndvi <span class="ot">&lt;-</span> (b5 <span class="sc">-</span> b4) <span class="sc">/</span> (b5 <span class="sc">+</span> b4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Taking the mean in the overlap zone is a practical compromise, but it papers over a real issue: even as ARD products, tiles acquired on different dates carry different atmospheric states, and their surface reflectance values may not be perfectly consistent over identical surface features. The mean averages the inconsistency rather than resolving it. <span class="citation" data-cites="schultetobuhne2018">Schulte to Bühne and Pettorelli (<a href="references.html#ref-schultetobuhne2018" role="doc-biblioref">2018</a>)</span> discuss the broader challenge of integrating multi-source imagery, noting that even after atmospheric correction, residual systematic differences between acquisitions can propagate into derived products — a point that becomes critical for change detection applications where the signal of interest may be smaller than the inter-scene noise.</p>
-<p><strong>NDVI</strong> was then computed and thresholded to isolate vegetated areas:</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>m1_NDVI <span class="ot">&lt;-</span> (m1_clip<span class="sc">$</span>LC08_L2SP_175083_20220501_20220504_02_T1_SR_B5 <span class="sc">-</span> </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>            m1_clip<span class="sc">$</span>LC08_L2SP_175083_20220501_20220504_02_T1_SR_B4) <span class="sc">/</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>           (m1_clip<span class="sc">$</span>LC08_L2SP_175083_20220501_20220504_02_T1_SR_B5 <span class="sc">+</span> </span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>            m1_clip<span class="sc">$</span>LC08_L2SP_175083_20220501_20220504_02_T1_SR_B4)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>veg <span class="ot">&lt;-</span> m1_NDVI <span class="sc">%&gt;%</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  terra<span class="sc">::</span><span class="fu">classify</span>(., <span class="fu">cbind</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="fl">0.2</span>, <span class="cn">NA</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
+<div id="fig-ndvi" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ndvi-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/ndvi_result3.png" class="img-fluid figure-img">
 </div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/ndvi_result3.png" class="img-fluid figure-img"></p>
-<figcaption>NDVI result for Cape Town study area. Values above 0.2 (green) indicate vegetated surfaces; values below 0.2 are masked. Note that Cape Town’s dominant fynbos shrubland often produces NDVI values between 0.1–0.2, meaning a blanket 0.2 threshold may exclude ecologically meaningful vegetation.</figcaption>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ndvi-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.1: NDVI for central London (Landsat 8, August 2024). The Thames appears as a white/brown corridor of NA values (negative reflectance filtered out). Dense vegetation in Richmond Park, Hampstead Heath, and the Lee Valley registers NDVI &gt; 0.6 (dark green), while the built-up urban core shows NDVI 0.1–0.3 (yellow). The spatial gradient from inner to outer London — increasing vegetation fraction with distance from the centre — is clearly visible.
+</figcaption>
 </figure>
 </div>
-<p>The 0.2 threshold is widely used but <strong>context-dependent</strong>. For Cape Town’s fynbos — a low-growing shrubland that is the city’s dominant natural vegetation type — values between 0.1 and 0.2 are common, particularly in drier months. A blanket 0.2 cut-off would exclude a significant portion of ecologically meaningful vegetation, which matters if the downstream application is green space access or heat stress mapping. This highlights a broader point: spectral indices are not neutral transforms — the choice of threshold encodes assumptions about what counts as “vegetation” that may not hold across biomes.</p>
-<p><strong>Texture analysis</strong> used <code>GLCMTextures</code> on Band 4 with a 7×7 window to compute GLCM homogeneity. A critical preprocessing step is rescaling the data — Landsat Level-2 products store reflectance as scaled integers, and texture metrics computed on raw integers would be physically meaningless:</p>
+<p>The NDVI output (<a href="week4.html#fig-ndvi" class="quarto-xref">Figure&nbsp;<span>5.1</span></a>) reveals London’s characteristic concentric vegetation gradient: the densely built inner boroughs (Tower Hamlets, Southwark, Islington) show low NDVI values, while the outer boroughs with extensive parkland and suburban gardens register substantially higher values. One detail worth noting is that the standard 0.2 threshold for “vegetated” surfaces may be inappropriate for London’s extensive <strong>private gardens</strong> — small, fragmented patches of grass and shrubs that individually fall below the 30 m Landsat pixel size and therefore produce mixed-pixel NDVI values that undercount actual green cover. This is a resolution limitation rather than a correction issue, but it matters for policy applications like the London Plan’s Urban Greening Factor (Week 4) where garden vegetation is a significant component of the city’s total green infrastructure.</p>
+<p><strong>GLCM texture</strong> was computed on Band 4 (Red) with a 7×7 moving window after rescaling:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLCMTextures)</span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLCMTextures)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>textures <span class="ot">&lt;-</span> <span class="fu">glcm_textures</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  london_scaled[[<span class="dv">4</span>]], <span class="at">w =</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">7</span>), <span class="at">n_levels =</span> <span class="dv">4</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">quant_method =</span> <span class="st">"range"</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">shift =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>), <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>)),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="st">"glcm_homogeneity"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="fig-texture" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-texture-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/texture_homogeneity.png" class="img-fluid figure-img" style="width:85.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-texture-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.2: GLCM homogeneity for central London. The Thames and large water bodies appear as high-homogeneity (red) corridors — uniform surfaces where neighbouring pixels are spectrally identical. The dense urban core shows heterogeneous texture (cyan/yellow patches) where buildings, roads, shadows, and vegetation fragments create high pixel-to-pixel variation within each 7×7 kernel. Large parks (Richmond, Regent’s, Hyde) appear as moderately homogeneous regions — internally consistent canopy, but with edge effects at park boundaries.
+</figcaption>
+</figure>
+</div>
+<p>The texture output (<a href="#fig-texture" class="quarto-xref">Figure&nbsp;<span>4.2</span></a>) encodes <strong>spatial context</strong> that raw spectral values cannot capture. Two neighbourhoods with identical mean NDVI might have completely different texture profiles: a formal residential area with evenly spaced street trees produces moderate, uniform homogeneity, while a brownfield site with scattered vegetation, rubble, and construction materials produces low, variable homogeneity despite similar average greenness. This distinction is precisely what makes texture valuable for urban classification — it captures the spatial arrangement of materials, not just their spectral properties. <span class="citation" data-cites="lu2012">Lu et al. (<a href="references.html#ref-lu2012" role="doc-biblioref">2012</a>)</span> demonstrated that adding GLCM features improved land cover classification accuracy by 8–12 percentage points in the Brazilian Amazon, where forest types with near-identical spectral signatures were distinguishable by their textural characteristics.</p>
+<p>The spectral and texture bands were then combined and reduced via <strong>Principal Component Analysis</strong>:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>raster_and_texture <span class="ot">&lt;-</span> <span class="fu">c</span>(london_scaled, textures)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>scale <span class="ot">&lt;-</span> (m1_clip <span class="sc">*</span> <span class="fl">0.0000275</span>) <span class="sc">+</span> <span class="sc">-</span><span class="fl">0.2</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>textures1 <span class="ot">&lt;-</span> <span class="fu">glcm_textures</span>(</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  scale<span class="sc">$</span>LC08_L2SP_175083_20220501_20220504_02_T1_SR_B4,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">w =</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">7</span>),</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_levels =</span> <span class="dv">4</span>,</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">quant_method =</span> <span class="st">"range"</span>,</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">shift =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>), <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>)),</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="st">"glcm_homogeneity"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>pca <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(<span class="fu">as.data.frame</span>(raster_and_texture, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">center=</span><span class="cn">TRUE</span>, <span class="at">scale=</span><span class="cn">TRUE</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>pca_raster <span class="ot">&lt;-</span> <span class="fu">predict</span>(raster_and_texture, pca)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/texture_homogeneity.png" class="img-fluid figure-img" style="width:85.0%"></p>
-<figcaption>GLCM homogeneity texture output. High homogeneity (bright) indicates uniform areas — water bodies, formal housing with regular rooftops — while low homogeneity (dark) indicates heterogeneous areas such as informal settlements, construction sites, and fragmented vegetation-building mixes.</figcaption>
+<div id="fig-pca" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pca-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/pca_result.png" class="img-fluid figure-img" style="width:95.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pca-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.3: The first three principal components for central London. PC1 (left) captures the dominant brightness/albedo gradient — the Thames and water bodies are clearly separated from land. PC2 (centre) isolates vegetation-urban contrast, effectively acting as an enhanced NDVI. PC3 (right) highlights the Thames corridor and water-land transitions with a distinctive signal, likely driven by the texture component’s sensitivity to the sharp boundary between the river’s high homogeneity and the adjacent built environment.
+</figcaption>
 </figure>
 </div>
-<p>Homogeneity captures information that <strong>spectral band values alone cannot</strong>: two areas with identical mean NIR reflectance may look completely different in texture if one is a uniform park canopy and the other is a fragmented mix of trees and rooftops. <span class="citation" data-cites="lu2012">Lu et al. (<a href="references.html#ref-lu2012" role="doc-biblioref">2012</a>)</span> demonstrated this in Brazilian Amazon land cover classification, where adding GLCM texture features substantially improved discrimination between forest types with near-identical spectral signatures — a finding directly relevant to urban contexts where built form diversity is high but spectral contrast is low.</p>
-<p>The texture band was then fused with spectral data and reduced via <strong>PCA</strong>, with centering and scaling applied to prevent variables with larger numerical ranges from dominating the components:</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>raster_and_texture <span class="ot">&lt;-</span> <span class="fu">c</span>(m1_clip, textures1)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>pca <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(<span class="fu">as.data.frame</span>(raster_and_texture, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">center=</span><span class="cn">TRUE</span>, <span class="at">scale=</span><span class="cn">TRUE</span>)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">predict</span>(raster_and_texture, pca)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/pca_result.png" class="img-fluid figure-img" style="width:85.0%"></p>
-<figcaption>PCA output showing the first three principal components. PC1 typically captures the overall brightness gradient (variance explained &gt; 80%), while PC2 and PC3 isolate spectral and textural contrasts that distinguish land cover types more effectively than individual bands.</figcaption>
-</figure>
-</div>
-<p>PCA takes advantage of <strong>multicollinearity</strong> between bands — a problem in regression but an asset here — to produce uncorrelated components that concentrate information. The practical benefit is dimensionality reduction: rather than feeding 8+ correlated spectral and texture bands into a classifier, the first 3–4 PCA components often capture &gt;95% of the variance in a fraction of the computational cost.</p>
+<p>The PCA results (<a href="#fig-pca" class="quarto-xref">Figure&nbsp;<span>4.3</span></a>) demonstrate <strong>dimensionality reduction in action</strong>. The original 8 input bands (7 spectral + 1 texture) are highly correlated — visible bands covary strongly with each other, as do SWIR bands. PCA transforms these into uncorrelated components ordered by variance explained. PC1 alone typically captures &gt;80% of the total variance, concentrating the dominant landscape signal (brightness) into a single band. PC2 and PC3 then isolate the residual contrasts — vegetation vs.&nbsp;built-up, water vs.&nbsp;land — that are most discriminative for classification. The practical benefit is that feeding 3 PCA components into a classifier (Weeks 6–7) achieves comparable accuracy to using all 8 original bands, at substantially lower computational cost and with reduced risk of overfitting.</p>
 <hr>
 </section>
 <section id="reflection" class="level2">
 <h2 class="anchored" data-anchor-id="reflection">Reflection</h2>
-<p>The most useful shift this week was in how I think about what “using satellite data” actually means. Before, I would have treated loading a Landsat image as a neutral act — the data is the data. Now I see there is a real difference between a researcher who can explain what <strong>collection, level, and processing model</strong> their data went through and one who cannot. That difference probably doesn’t matter for a single-date, single-sensor classification, but it matters enormously for anything involving long time series or cross-sensor comparison — which is most of the research questions this module is pointing towards.</p>
-<p>On texture: the GLCM homogeneity output is essentially a <strong>spatial derivative</strong> — it responds to edges and transitions rather than mean values. For urban analysis, this means building outlines, road margins, and land cover boundaries all become detectable even when the spectral values on either side are similar. I found this genuinely useful to think through, and it suggests that for fine-grained urban classification, texture in SWIR or NIR is probably not optional — it is a necessary complement to spectral information.</p>
-<p>One question I have not resolved: the practical used a <strong>7×7 window on 30 m Landsat</strong>, which covers a 210 m ground footprint per texture pixel. At that scale, individual buildings and street trees are subsumed within a single kernel. For 10 m Sentinel-2 the same window would cover 70 m — much closer to the scale of urban features I would want to detect. I am not clear whether there is a principled method for choosing window size relative to resolution and target feature scale, or whether it is largely empirical. <span class="citation" data-cites="hall-beyer2017">Hall-Beyer (<a href="references.html#ref-hall-beyer2017" role="doc-biblioref">2017</a>)</span> notes that window size should approximate the spatial extent of the texture pattern of interest, but in practice most studies appear to use 3×3, 5×5, or 7×7 without rigorous justification. This seems like a parameter choice that could meaningfully affect classification accuracy in dense urban environments, and something worth investigating systematically when we move to Google Earth Engine later in the module.</p>
-<hr>
+<p>The most useful shift this week was recognising that the <strong>processing chain is not a technical footnote but a substantive analytical decision</strong>. Choosing between Level-1 DN and Level-2 surface reflectance is not a convenience preference — it determines whether pixel values are physically comparable across time, space, and sensors. A researcher who downloads Level-2 data and computes NDVI has implicitly accepted the atmospheric correction model used by USGS (currently LaSRC for Landsat 8/9), including its assumptions about aerosol optical depth and atmospheric profile. A researcher who downloads Level-1 and applies DOS has made a different, less rigorous but more transparent, choice. Neither is inherently wrong, but the choice should be stated and justified — and my initial experience of computing NDVI on unscaled integers demonstrated viscerally what happens when the processing chain is ignored entirely.</p>
+<p>The texture and PCA workflow raised a practical question that I think will recur throughout the module: <strong>how do you choose analysis parameters when there is no theoretical optimum?</strong> The 7×7 GLCM window on 30 m Landsat covers a 210 m ground footprint — large enough to subsume entire city blocks within a single texture kernel. For London’s fine-grained urban morphology, where terraced housing, gardens, and streets alternate at 10–20 m intervals, this window may average out exactly the spatial variation that texture is meant to capture. Reducing the window to 3×3 (90 m footprint) would preserve finer-scale patterns but increase noise sensitivity. Using Sentinel-2 at 10 m with a 7×7 window (70 m footprint) would be closer to the feature scale of interest, but introduces different spectral characteristics. There is no formula that resolves this trade-off — it depends on the target features, the downstream application, and empirical testing against validation data. This feels like a microcosm of a broader lesson: remote sensing analysis involves a chain of parameter choices (atmospheric correction method, resampling algorithm, index threshold, window size, number of PCA components) each of which affects the final output, and the quality of the analysis lies as much in justifying these choices as in executing them.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
-<div id="ref-hall-beyer2017" class="csl-entry" role="listitem">
-Hall-Beyer, Mryka. 2017. <span>“Practical Guidelines for Choosing <span>GLCM</span> Textures to Use in Landscape Classification Tasks over a Range of Sensor Resolutions.”</span> <em>International Journal of Remote Sensing</em> 38 (5): 1312–38.
-</div>
 <div id="ref-jensen2015" class="csl-entry" role="listitem">
 Jensen, John R. 2015. <em>Introductory Digital Image Processing: A Remote Sensing Perspective</em>. 4th ed. Prentice Hall.
 </div>
 <div id="ref-lu2012" class="csl-entry" role="listitem">
 Lu, Dengsheng, Guiying Li, Emilio Moran, Luciano Dutra, and Mateus Batistella. 2012. <span>“Land Use/Cover Classification in the <span>Brazilian Amazon</span> Using Satellite Images.”</span> <em>Pesquisa Agropecu<span>á</span>ria Brasileira</em> 47 (9): 1185–1208.
-</div>
-<div id="ref-schultetobuhne2018" class="csl-entry" role="listitem">
-Schulte to Bühne, Henrike, and Nathalie Pettorelli. 2018. <span>“Better Together: Integrating and Fusing Multispectral and Radar Satellite Imagery to Inform Biodiversity Monitoring, Ecological Research and Conservation Science.”</span> <em>Methods in Ecology and Evolution</em> 9 (4): 849–65.
 </div>
 </div>
 </section>
@@ -803,8 +793,8 @@ Schulte to Bühne, Henrike, and Nathalie Pettorelli. 2018. <span>“Better Toget
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./week2.html" class="pagination-link" aria-label="week2">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">week2</span></span>
+      <a href="./week2.html" class="pagination-link" aria-label="Week 2: Portfolio Tools &amp; Sentinel-2 Sensor">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Week 2: Portfolio Tools &amp; Sentinel-2 Sensor</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

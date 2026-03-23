@@ -5,98 +5,81 @@ editor: visual
 
 ## Summary
 
-This week's lecture opened with a useful framing: nearly all Earth observation data now comes as **Analysis Ready Data (ARD)**, meaning the corrections covered this week have largely been automated in operational pipelines. The reason to understand them anyway is that loading a Landsat image in Google Earth Engine still requires choosing between Level-1 DN, Level-2 surface reflectance, and Level-3 science products — and that choice has real consequences for what the values in your raster actually mean. The lecturer's point that some researchers make this choice without understanding it was a sharp reminder that familiarity with a tool is not the same as understanding the data it produces.
+This week unpacked what happens between a satellite recording raw electromagnetic energy and a researcher loading "ready-to-use" surface reflectance — a pipeline that most users never see but that fundamentally determines what their pixel values mean. The lecture framed this around a deceptively simple question: **when you load a Landsat image, what are you actually looking at?** The answer depends entirely on which product level you chose, and the differences are not cosmetic.
 
-The corrections follow a fixed order: **geometric → atmospheric → orthorectification**. Geometric correction aligns an image to a known coordinate reference system by identifying Ground Control Points (GCPs) at stable features — roads, boundaries, buildings — fitting a regression between their positions in the distorted image and a reference dataset, and warping the image accordingly. The reason **backward mapping** is preferred over forward mapping is worth noting: forward mapping can produce predicted positions that fall between grid cells, creating output pixels with no assignable value, whereas backward mapping guarantees a value for every output pixel. After warping, resampling — nearest neighbour, bilinear, or cubic convolution — snaps the transformed grid back to integer positions.
+The starting point is the **Digital Number (DN)** — a dimensionless integer that encodes the detector's response to incoming radiance, scaled and quantised for efficient storage and transmission. DN has no physical meaning: the same surface feature will produce different DN values depending on the sensor's gain settings, the Sun-Earth distance on the acquisition date, and the solar elevation angle. Converting DN to **spectral radiance** ($L_\lambda = Gain \times DN + Bias$, with coefficients from the metadata) gives a physically meaningful quantity — the power per unit area per steradian per wavelength reaching the sensor. But radiance still conflates the surface signal with atmospheric contamination and illumination geometry. The next step, **Top of Atmosphere (TOA) reflectance**, normalises for solar irradiance and Sun-Earth distance, removing illumination effects but leaving the atmosphere in place. Only **surface reflectance (BOA)** — obtained by modelling and removing atmospheric absorption and scattering — gives a value that is a property of the surface itself, comparable across dates, sensors, and locations.
 
-Atmospheric correction addresses the contamination introduced by **path radiance** (EMR scattered into the sensor before touching the surface) and the **adjacency effect** (radiance bleeding from neighbouring pixels). Dark Object Subtraction (DOS) is the simplest relative approach: identify the darkest pixel in each band, assume it represents a surface with near-zero true reflectance, and subtract its value from all other pixels. The underlying logic — that any signal from a truly black surface must be atmospheric — is reasonable but approximate, which is why DOS is considered a lower bound rather than a rigorous correction [@jensen2015]. The more sophisticated COST variant incorporates the cosine of the solar zenith angle ($\tau_z$), while Pseudo-Invariant Features (PIFs) offer a more principled relative method, using regression across stable surfaces to normalise multiple images to a single reference date.
+**Atmospheric correction** is where most of the analytical complexity lies. The atmosphere contaminates the signal in two principal ways: **path radiance** (sunlight scattered by atmospheric particles into the sensor's field of view without ever touching the surface) and **atmospheric absorption** (selective removal of energy at wavelengths where gases like water vapour and ozone absorb strongly). **Dark Object Subtraction (DOS)** is the simplest correction: find the darkest pixel per band (assumed to be a near-zero-reflectance surface like deep shadow or clear water), attribute its value entirely to path radiance, and subtract it from all pixels. The COST variant improves on this by incorporating the cosine of the solar zenith angle to account for the optical path length through the atmosphere. Both are **relative** methods — they adjust internal consistency within a scene but don't produce physically rigorous surface reflectance. **Absolute** methods like 6S or MODTRAN use radiative transfer models parameterised with atmospheric profile data (aerosol optical depth, water vapour column) to simulate atmospheric effects and invert them — this is what Landsat Collection 2 Level-2 products use, and it is substantially more accurate than DOS, though still model-dependent [@jensen2015].
 
-DN is a dimensionless, sensor-specific integer with no physical meaning beyond efficient storage. Radiance, obtained via $L_\lambda = Bias + Gain \times DN$ using lab-calibrated coefficients, gives the quantity in meaningful units (W·m⁻²·sr⁻¹·μm⁻¹). Surface reflectance then removes the effects of both illumination conditions and the atmosphere, leaving a value that is a property of the surface itself — and therefore **comparable across acquisitions**. TOA reflectance occupies an intermediate position: illumination effects removed, but atmosphere still present. Some papers use TOA on the grounds that scenes were clear enough that residual atmospheric effects were negligible — a judgement call that should at minimum be stated explicitly.
+**Geometric correction** was covered more briefly but contains an important conceptual point. Ground Control Points (GCPs) establish the relationship between pixel coordinates in the distorted image and real-world coordinates from a reference dataset. The regression model fitted to these points (first-order polynomial for simple shift/rotation, higher-order for more complex distortions) is then used to warp the image. **Backward mapping** — computing, for each output pixel, where in the input image its value comes from — is preferred over forward mapping because it guarantees every output pixel receives a value, whereas forward mapping can leave gaps. After transformation, **resampling** (nearest neighbour, bilinear, or cubic convolution) assigns values to the new regular grid, each method representing a different trade-off between computational speed and spatial fidelity.
 
 ------------------------------------------------------------------------
 
 ## Application
 
-The practical used **Landsat 8 and 9 imagery over Cape Town**, which requires at least two tiles to cover the metropolitan area — a direct consequence of Landsat's Worldwide Reference System (WRS-2) grid not aligning with administrative boundaries. The tiles were loaded and mosaicked using `terra::mosaic()`:
+For this week's practical, I applied the correction and enhancement workflow to **Landsat 8 imagery over London** (Path 201, Row 024, acquired August 2024). Unlike Cape Town (the practical's default city), London is covered by a single Landsat tile, so mosaicking was not required — but the single-tile workflow still involves the full processing chain from scaled integers to meaningful surface reflectance.
+
+The first step after loading the seven SR bands was **rescaling**. Landsat Collection 2 Level-2 surface reflectance is stored as scaled integers (multiplied by a scale factor of 0.0000275 with an offset of −0.2) for storage efficiency. Forgetting this step — which I initially did — produces nonsensical derived products: my first NDVI attempt yielded values ranging from −5000 to +1000, because the ratio was computed on raw integers where the additive offset had not been applied. This is exactly the kind of silent error the lecture warned about — the code runs without complaint, but the output is physically meaningless.
 
 ```{r, eval=FALSE}
 library(terra)
-library(fs)
 
-listlandsat_8 <- dir_info(here::here("prac_3", "Landsat", "Lsat8")) %>%
-  dplyr::filter(str_detect(path, "[B123456790].TIF")) %>%
-  dplyr::select(path) %>% pull() %>% as.character() %>%
+# Load and crop to central London
+landsat_files <- list.files("/Users/LandsatLondon",
+  pattern = "SR_B[1-7].TIF$", full.names = TRUE) %>%
   terra::rast()
 
-listlandsat_9 <- dir_info(here::here("prac_3", "Landsat", "Lsat9")) %>%
-  dplyr::filter(str_detect(path, "[1B23456790].TIF")) %>%
-  dplyr::select(path) %>% pull() %>% as.character() %>%
-  terra::rast()
+london_clip <- terra::crop(landsat_files, ext(500000, 530000, 5700000, 5720000))
 
-m1 <- terra::mosaic(listlandsat_8, listlandsat_9, fun="mean")
+# CRITICAL: apply scale factors before any computation
+london_scaled <- (london_clip * 0.0000275) + (-0.2)
+
+# Filter invalid values before NDVI
+b4 <- london_scaled[[4]]; b5 <- london_scaled[[5]]
+b4[b4 <= 0] <- NA; b5[b5 <= 0] <- NA
+
+ndvi <- (b5 - b4) / (b5 + b4)
 ```
 
-Taking the mean in the overlap zone is a practical compromise, but it papers over a real issue: even as ARD products, tiles acquired on different dates carry different atmospheric states, and their surface reflectance values may not be perfectly consistent over identical surface features. The mean averages the inconsistency rather than resolving it. @schultetobuhne2018 discuss the broader challenge of integrating multi-source imagery, noting that even after atmospheric correction, residual systematic differences between acquisitions can propagate into derived products — a point that becomes critical for change detection applications where the signal of interest may be smaller than the inter-scene noise.
+![NDVI for central London (Landsat 8, August 2024). The Thames appears as a white/brown corridor of NA values (negative reflectance filtered out). Dense vegetation in Richmond Park, Hampstead Heath, and the Lee Valley registers NDVI \> 0.6 (dark green), while the built-up urban core shows NDVI 0.1–0.3 (yellow). The spatial gradient from inner to outer London — increasing vegetation fraction with distance from the centre — is clearly visible.](images/ndvi_result3.png){#fig-ndvi}
 
-**NDVI** was then computed and thresholded to isolate vegetated areas:
+The NDVI output (@fig-ndvi) reveals London's characteristic concentric vegetation gradient: the densely built inner boroughs (Tower Hamlets, Southwark, Islington) show low NDVI values, while the outer boroughs with extensive parkland and suburban gardens register substantially higher values. One detail worth noting is that the standard 0.2 threshold for "vegetated" surfaces may be inappropriate for London's extensive **private gardens** — small, fragmented patches of grass and shrubs that individually fall below the 30 m Landsat pixel size and therefore produce mixed-pixel NDVI values that undercount actual green cover. This is a resolution limitation rather than a correction issue, but it matters for policy applications like the London Plan's Urban Greening Factor (Week 4) where garden vegetation is a significant component of the city's total green infrastructure.
 
-```{r, eval=FALSE}
-m1_NDVI <- (m1_clip$LC08_L2SP_175083_20220501_20220504_02_T1_SR_B5 - 
-            m1_clip$LC08_L2SP_175083_20220501_20220504_02_T1_SR_B4) /
-           (m1_clip$LC08_L2SP_175083_20220501_20220504_02_T1_SR_B5 + 
-            m1_clip$LC08_L2SP_175083_20220501_20220504_02_T1_SR_B4)
-
-veg <- m1_NDVI %>%
-  terra::classify(., cbind(-Inf, 0.2, NA))
-```
-
-![NDVI result for Cape Town study area. Values above 0.2 (green) indicate vegetated surfaces; values below 0.2 are masked. Note that Cape Town's dominant fynbos shrubland often produces NDVI values between 0.1–0.2, meaning a blanket 0.2 threshold may exclude ecologically meaningful vegetation.](images/ndvi_result3.png)
-
-The 0.2 threshold is widely used but **context-dependent**. For Cape Town's fynbos — a low-growing shrubland that is the city's dominant natural vegetation type — values between 0.1 and 0.2 are common, particularly in drier months. A blanket 0.2 cut-off would exclude a significant portion of ecologically meaningful vegetation, which matters if the downstream application is green space access or heat stress mapping. This highlights a broader point: spectral indices are not neutral transforms — the choice of threshold encodes assumptions about what counts as "vegetation" that may not hold across biomes.
-
-**Texture analysis** used `GLCMTextures` on Band 4 with a 7×7 window to compute GLCM homogeneity. A critical preprocessing step is rescaling the data — Landsat Level-2 products store reflectance as scaled integers, and texture metrics computed on raw integers would be physically meaningless:
+**GLCM texture** was computed on Band 4 (Red) with a 7×7 moving window after rescaling:
 
 ```{r, eval=FALSE}
 library(GLCMTextures)
 
-scale <- (m1_clip * 0.0000275) + -0.2
-
-textures1 <- glcm_textures(
-  scale$LC08_L2SP_175083_20220501_20220504_02_T1_SR_B4,
-  w = c(7, 7),
-  n_levels = 4,
+textures <- glcm_textures(
+  london_scaled[[4]], w = c(7, 7), n_levels = 4,
   quant_method = "range",
   shift = list(c(1,0), c(1,1), c(0,1), c(-1,1)),
   metrics = "glcm_homogeneity")
 ```
 
-![GLCM homogeneity texture output. High homogeneity (bright) indicates uniform areas — water bodies, formal housing with regular rooftops — while low homogeneity (dark) indicates heterogeneous areas such as informal settlements, construction sites, and fragmented vegetation-building mixes.](images/texture_homogeneity.png){width="85%"}
+![GLCM homogeneity for central London. The Thames and large water bodies appear as high-homogeneity (red) corridors — uniform surfaces where neighbouring pixels are spectrally identical. The dense urban core shows heterogeneous texture (cyan/yellow patches) where buildings, roads, shadows, and vegetation fragments create high pixel-to-pixel variation within each 7×7 kernel. Large parks (Richmond, Regent's, Hyde) appear as moderately homogeneous regions — internally consistent canopy, but with edge effects at park boundaries.](images/texture_homogeneity.png){#fig-texture width="85%"}
 
-Homogeneity captures information that **spectral band values alone cannot**: two areas with identical mean NIR reflectance may look completely different in texture if one is a uniform park canopy and the other is a fragmented mix of trees and rooftops. @lu2012 demonstrated this in Brazilian Amazon land cover classification, where adding GLCM texture features substantially improved discrimination between forest types with near-identical spectral signatures — a finding directly relevant to urban contexts where built form diversity is high but spectral contrast is low.
+The texture output (@fig-texture) encodes **spatial context** that raw spectral values cannot capture. Two neighbourhoods with identical mean NDVI might have completely different texture profiles: a formal residential area with evenly spaced street trees produces moderate, uniform homogeneity, while a brownfield site with scattered vegetation, rubble, and construction materials produces low, variable homogeneity despite similar average greenness. This distinction is precisely what makes texture valuable for urban classification — it captures the spatial arrangement of materials, not just their spectral properties. @lu2012 demonstrated that adding GLCM features improved land cover classification accuracy by 8–12 percentage points in the Brazilian Amazon, where forest types with near-identical spectral signatures were distinguishable by their textural characteristics.
 
-The texture band was then fused with spectral data and reduced via **PCA**, with centering and scaling applied to prevent variables with larger numerical ranges from dominating the components:
+The spectral and texture bands were then combined and reduced via **Principal Component Analysis**:
 
 ```{r, eval=FALSE}
-raster_and_texture <- c(m1_clip, textures1)
+raster_and_texture <- c(london_scaled, textures)
 
 pca <- prcomp(as.data.frame(raster_and_texture, na.rm=TRUE),
               center=TRUE, scale=TRUE)
 
-x <- predict(raster_and_texture, pca)
+pca_raster <- predict(raster_and_texture, pca)
 ```
 
-![PCA output showing the first three principal components. PC1 typically captures the overall brightness gradient (variance explained \> 80%), while PC2 and PC3 isolate spectral and textural contrasts that distinguish land cover types more effectively than individual bands.](images/pca_result.png){width="85%"}
+![The first three principal components for central London. PC1 (left) captures the dominant brightness/albedo gradient — the Thames and water bodies are clearly separated from land. PC2 (centre) isolates vegetation-urban contrast, effectively acting as an enhanced NDVI. PC3 (right) highlights the Thames corridor and water-land transitions with a distinctive signal, likely driven by the texture component's sensitivity to the sharp boundary between the river's high homogeneity and the adjacent built environment.](images/pca_result.png){#fig-pca width="95%"}
 
-PCA takes advantage of **multicollinearity** between bands — a problem in regression but an asset here — to produce uncorrelated components that concentrate information. The practical benefit is dimensionality reduction: rather than feeding 8+ correlated spectral and texture bands into a classifier, the first 3–4 PCA components often capture \>95% of the variance in a fraction of the computational cost.
+The PCA results (@fig-pca) demonstrate **dimensionality reduction in action**. The original 8 input bands (7 spectral + 1 texture) are highly correlated — visible bands covary strongly with each other, as do SWIR bands. PCA transforms these into uncorrelated components ordered by variance explained. PC1 alone typically captures \>80% of the total variance, concentrating the dominant landscape signal (brightness) into a single band. PC2 and PC3 then isolate the residual contrasts — vegetation vs. built-up, water vs. land — that are most discriminative for classification. The practical benefit is that feeding 3 PCA components into a classifier (Weeks 6–7) achieves comparable accuracy to using all 8 original bands, at substantially lower computational cost and with reduced risk of overfitting.
 
 ------------------------------------------------------------------------
 
 ## Reflection
 
-The most useful shift this week was in how I think about what "using satellite data" actually means. Before, I would have treated loading a Landsat image as a neutral act — the data is the data. Now I see there is a real difference between a researcher who can explain what **collection, level, and processing model** their data went through and one who cannot. That difference probably doesn't matter for a single-date, single-sensor classification, but it matters enormously for anything involving long time series or cross-sensor comparison — which is most of the research questions this module is pointing towards.
+The most useful shift this week was recognising that the **processing chain is not a technical footnote but a substantive analytical decision**. Choosing between Level-1 DN and Level-2 surface reflectance is not a convenience preference — it determines whether pixel values are physically comparable across time, space, and sensors. A researcher who downloads Level-2 data and computes NDVI has implicitly accepted the atmospheric correction model used by USGS (currently LaSRC for Landsat 8/9), including its assumptions about aerosol optical depth and atmospheric profile. A researcher who downloads Level-1 and applies DOS has made a different, less rigorous but more transparent, choice. Neither is inherently wrong, but the choice should be stated and justified — and my initial experience of computing NDVI on unscaled integers demonstrated viscerally what happens when the processing chain is ignored entirely.
 
-On texture: the GLCM homogeneity output is essentially a **spatial derivative** — it responds to edges and transitions rather than mean values. For urban analysis, this means building outlines, road margins, and land cover boundaries all become detectable even when the spectral values on either side are similar. I found this genuinely useful to think through, and it suggests that for fine-grained urban classification, texture in SWIR or NIR is probably not optional — it is a necessary complement to spectral information.
-
-One question I have not resolved: the practical used a **7×7 window on 30 m Landsat**, which covers a 210 m ground footprint per texture pixel. At that scale, individual buildings and street trees are subsumed within a single kernel. For 10 m Sentinel-2 the same window would cover 70 m — much closer to the scale of urban features I would want to detect. I am not clear whether there is a principled method for choosing window size relative to resolution and target feature scale, or whether it is largely empirical. @hall-beyer2017 notes that window size should approximate the spatial extent of the texture pattern of interest, but in practice most studies appear to use 3×3, 5×5, or 7×7 without rigorous justification. This seems like a parameter choice that could meaningfully affect classification accuracy in dense urban environments, and something worth investigating systematically when we move to Google Earth Engine later in the module.
-
-------------------------------------------------------------------------
+The texture and PCA workflow raised a practical question that I think will recur throughout the module: **how do you choose analysis parameters when there is no theoretical optimum?** The 7×7 GLCM window on 30 m Landsat covers a 210 m ground footprint — large enough to subsume entire city blocks within a single texture kernel. For London's fine-grained urban morphology, where terraced housing, gardens, and streets alternate at 10–20 m intervals, this window may average out exactly the spatial variation that texture is meant to capture. Reducing the window to 3×3 (90 m footprint) would preserve finer-scale patterns but increase noise sensitivity. Using Sentinel-2 at 10 m with a 7×7 window (70 m footprint) would be closer to the feature scale of interest, but introduces different spectral characteristics. There is no formula that resolves this trade-off — it depends on the target features, the downstream application, and empirical testing against validation data. This feels like a microcosm of a broader lesson: remote sensing analysis involves a chain of parameter choices (atmospheric correction method, resampling algorithm, index threshold, window size, number of PCA components) each of which affects the final output, and the quality of the analysis lies as much in justifying these choices as in executing them.
