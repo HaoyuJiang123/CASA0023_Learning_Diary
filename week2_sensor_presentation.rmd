@@ -1,0 +1,129 @@
+---
+title: "Week 2: Sentinel-2 Sensor Overview & Applications"
+author: "Haoyu Jiang"
+date: "02 2026"
+output: xaringan::moon_reader
+---
+
+# Sentinel-2: Multispectral Imaging for Earth Observation
+- CASA0023 Learning Diary
+- Author: Haoyu Jiang
+- 2026.2
+
+---
+
+# Summary: Sensor Overview
+Sentinel-2 is a high-resolution, multi-spectral imaging mission operated by ESA.It measures electromagnetic energy, not just images.
+.pull-left[
+**Core Specifications**  
+- Twin satellites (2A & 2B) with 5-day revisit at equator  
+- 13 spectral bands (VNIR → SWIR)  
+- Spatial resolution: 10 / 20 / 60 m depending on band
+]
+.pull-right[
+**Data Democracy**  
+- Free, open-access imagery globally (Wulder et al., 2012)  
+- Enables frequent time-series analysis for monitoring land surfaces
+]
+
+![Sentinel-2 Overview](images/Sentinel-2.jpg){width="80%"}class: inverse, center, middle
+
+---
+
+# Summary – Independent Thought
+
+.pull-left[
+**True scientific value**  
+- Spectral band positioning > pixel size  
+- **Red-edge bands (B5-B7)** capture subtle chlorophyll reflectance  
+
+**Limitations**  
+- Optical sensors → affected by cloud cover, shadows  
+- Revisit frequency varies by latitude  
+
+**ESA Level-2A products**  
+- Focus on surface reflectance  
+- Reduce preprocessing burden
+]
+
+.pull-right[
+<img src="images/6a9e4b57ac0f45b8563262f4393c6e3804841cea-1920x1080.jpg" alt="Sentinel-2 Bands Combinations" style="width:100%; margin-bottom:5px;">
+<sub style="font-size:0.3em;">Figure 1: Sentinel-2 band combinations (Visual, Bathymetric, Color Infrared, NDMI, Geology, NDVI).</sub>
+
+<img src="images/Sentinel-2-spectral-bands-Martimort-et-al-2007.png" alt="Sentinel-2 Spectral Bands" style="width:100%; margin-top:10px;">
+<sub style="font-size:0.3em;">Figure 2: Sentinel-2 spectral bands (B1–B12), highlighting Red-edge bands B5-B7, sensitive to chlorophyll content.</sub>
+]
+
+---
+
+# Application I: Urban Radiation Budget
+- Purpose: Assess urban heat islands (UHI) & impervious surface effects  
+- Method: SWIR + NIR → compute **NDBI**  
+$$NDBI = \frac{SWIR - NIR}{SWIR + NIR}$$
+- Sentinel-2 20m SWIR differentiates reflective (cool roofs) vs heat-absorbing surfaces
+
+<div style="display:flex; align-items:flex-start; gap:10px;">
+  <img src="images/stifling-urban-heat-island-effect-captured-from-space-esa-images-2023-july-1693404931272_1280.jpg" 
+       alt="Urban Heat Example" style="width:50%;">
+  <div style="font-size:0.9em; line-height:1.2;">
+    <strong>Figure:</strong> Satellite-derived land surface temperature (LST) map showing urban heat island effect in Rome, Italy (17 July 2023). Hot areas in red indicate high surface temperature; cooler areas in blue/green indicate lower surface temperature. Source: ESA.
+  </div>
+</div>
+---
+
+# Application II: Coastal Water Quality
+- Purpose: Monitor eutrophication & harmful algal blooms (HABs) in urban-rural fringe water  
+- Method: Coastal Aerosol band (B1) + Red-edge → detect Chlorophyll-a  
+- Significance: NIR absorption vs algae reflectance allows high-frequency assessment
+
+<div style="display:flex; align-items:flex-start; gap:12px;">
+  <img src="images/skynews-algae-bloom-satellite_6075001.jpg" 
+       alt="Coastal Water Example" style="width:60%;">
+  <div style="font-size:0.9em; line-height:1.3;">
+    <strong>Figure:</strong> High-resolution satellite image showing coastal algal blooms and water color changes due to eutrophication. Blue and green swirls indicate variations in chlorophyll-a concentration and water optical properties, suitable for monitoring coastal water quality via remote sensing.
+  </div>
+</div>
+
+---
+# Application III: Wildfire Burn Severity
+
+Moving beyond routine monitoring, Sentinel-2 offers unprecedented capabilities in post-disaster ecological assessment.
+
+.pull-left[
+**Study: Burn Severity Estimation**  
+- **Methodology**: Sentinel-2 red-edge spectral indices (B5–B7) to map wildfire burn severity, outperforming traditional SWIR/NIR indices (Fernández-Manso et al., 2016).  
+- **Application**: Quantifying ecological damage to guide forest recovery and emergency resource allocation.  
+- **Key Finding**: Red-edge indices (CIre, PSRI, NDVIre1) clearly separate four burn severity levels.
+]
+
+.pull-right[
+<div style="display:flex; flex-direction:column; align-items:flex-start; gap:6px;">
+  <img src="images/1234.png" 
+       alt="Sentinel-2 Burn Severity Scatterplot" style="width:90%;">
+  <sub style="font-size:0.6em; line-height:1.2;">
+    Sentinel-2 MSI spectral scatterplot matrix showing four burn severity classes:  
+    Negligible to slight damage, Highly damaged, × Moderately damaged, + Destroyed.  
+    Red-edge bands (B5–B7) clearly separate severity levels, enabling accurate post-fire ecological assessment (Fernández-Manso et al., 2016).
+  </sub>
+</div>
+]
+---
+
+# Reflection: Personal Insights
+- Remote sensing = physical measurement, not just imagery  
+- Red-edge bands critical for vegetation and crop monitoring  
+- Free, high-resolution imagery enables spatial equity research in low-income neighborhoods  
+
+
+---
+
+# Reflection: Broader Context & Future Use
+- Future applications:  
+  - Monitor green space degradation & heat exposure  
+  - Integrate urban microclimate & retail studies  
+  - Disaster risk mapping & early warning systems  
+- Xaringan + Markdown + LaTeX + R → reproducible, transparent digital report  
+
+
+---
+
